@@ -227,6 +227,40 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
 .var-opt.active{background:var(--sage);border-color:var(--sage);color:white}
 .start-workout-btn{width:100%;padding:14px;border-radius:var(--radius);border:none;background:linear-gradient(135deg,var(--rose),var(--plum-deep));color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;letter-spacing:.02em}
 .start-workout-btn:hover{opacity:.92}
+/* CALENDAR HABIT TRACKER */
+.cal-card{background:var(--white);border-radius:var(--radius);border:1.5px solid var(--border-soft);padding:18px;margin-bottom:14px}
+.cal-card h3{font-family:'Playfair Display',serif;font-size:19px;font-weight:400;margin-bottom:4px;color:var(--rose-deep)}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.cal-nav button{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--parchment-mid);background:var(--parchment);cursor:pointer;font-size:15px;color:var(--rose);display:flex;align-items:center;justify-content:center}
+.cal-month{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink)}
+.cal-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--ink-soft)}
+.leg-dot{width:10px;height:10px;border-radius:50%}
+.cal-grid-head{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+.cal-day-head{text-align:center;font-size:10px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;padding:4px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day{border-radius:var(--radius-sm);padding:5px 3px;min-height:58px;border:1px solid var(--border-soft);background:var(--parchment);position:relative;cursor:pointer}
+.cal-day.empty{background:transparent;border-color:transparent;cursor:default}
+.cal-day.today{border-color:var(--rose);border-width:2px}
+.cal-day.future{opacity:.45}
+.cal-day-num{font-size:11px;font-weight:700;color:var(--ink-soft);margin-bottom:4px;text-align:center}
+.cal-day.today .cal-day-num{color:var(--rose)}
+.cal-dots{display:flex;gap:2px;justify-content:center;flex-wrap:wrap}
+.cal-dot{width:8px;height:8px;border-radius:50%}
+.cal-dot-activity{background:var(--rose)}
+.cal-dot-water{background:#3D8A60}
+.cal-dot-protein{background:var(--clay)}
+.cal-dot-cycle-m{background:#C4607A}
+.cal-dot-cycle-f{background:var(--sage)}
+.cal-dot-cycle-o{background:var(--clay)}
+.cal-dot-cycle-l{background:var(--plum)}
+.protein-log-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.protein-log-row label{font-size:12px;font-weight:700;color:var(--ink-soft)}
+.cal-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.cal-sum-box{background:var(--parchment);border-radius:var(--radius-sm);padding:12px;text-align:center}
+.cal-sum-val{font-family:'Playfair Display',serif;font-size:22px;line-height:1}
+.cal-sum-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-top:3px}
+@media(max-width:400px){.cal-day{min-height:48px}}
 </style>
 </head>
 <body>
@@ -260,6 +294,7 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
   <button class="nbtn active" onclick="showPanel('week',this)">This week</button>
   <button class="nbtn" onclick="showPanel('insights',this)">&#128161; Tips &amp; recipes</button>
   <button class="nbtn" onclick="showPanel('cycle',this)">&#127752; Cycle</button>
+  <button class="nbtn" onclick="showPanel('calendar',this)">&#128197; Calendar</button>
   <button class="nbtn" onclick="showPanel('pushups',this)">Push-ups</button>
   <button class="nbtn" onclick="showPanel('splits',this)">Splits</button>
   <button class="nbtn" onclick="showPanel('log',this)">Log</button>
@@ -354,6 +389,42 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
       <input type="number" id="cycle-length" min="21" max="45" value="35" style="width:70px">
     </div>
     <button class="save-btn" onclick="saveCycleSettings()">Save cycle settings</button>
+  </div>
+</div>
+
+<div id="panel-calendar" class="panel">
+  <div class="cal-card">
+    <div class="cal-nav">
+      <button onclick="calChangeMonth(-1)">&#8592;</button>
+      <div class="cal-month" id="cal-month-label">April 2026</div>
+      <button onclick="calChangeMonth(1)">&#8594;</button>
+    </div>
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="leg-dot" style="background:var(--rose)"></div>Activity</div>
+      <div class="cal-legend-item"><div class="leg-dot" style="background:#3D8A60"></div>Water goal</div>
+      <div class="cal-legend-item"><div class="leg-dot" style="background:var(--clay)"></div>Protein goal</div>
+      <div class="cal-legend-item"><div class="leg-dot" style="background:var(--plum)"></div>Cycle phase</div>
+    </div>
+    <div class="cal-grid-head">
+      <div class="cal-day-head">Mon</div><div class="cal-day-head">Tue</div><div class="cal-day-head">Wed</div>
+      <div class="cal-day-head">Thu</div><div class="cal-day-head">Fri</div><div class="cal-day-head">Sat</div><div class="cal-day-head">Sun</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-summary">
+      <div class="cal-sum-box"><div class="cal-sum-val" id="cal-sum-activity" style="color:var(--rose)">0</div><div class="cal-sum-label">Active days</div></div>
+      <div class="cal-sum-box"><div class="cal-sum-val" id="cal-sum-water" style="color:#3D8A60">0</div><div class="cal-sum-label">Water goals</div></div>
+      <div class="cal-sum-box"><div class="cal-sum-val" id="cal-sum-protein" style="color:var(--clay)">0</div><div class="cal-sum-label">Protein goals</div></div>
+    </div>
+  </div>
+  <div class="cal-card">
+    <h3>&#129385; Log today's protein</h3>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">Target: 1.6&ndash;2g per kg bodyweight. Tap to mark goal hit, or log your grams.</p>
+    <div class="protein-log-row">
+      <label>Grams today</label>
+      <input type="number" id="protein-grams" min="0" max="300" placeholder="e.g. 120" style="width:90px">
+      <button class="save-btn" style="margin-top:0" onclick="logProtein()">Log protein</button>
+    </div>
+    <button onclick="markProteinGoal()" style="margin-top:10px;width:100%;padding:11px;border-radius:var(--radius);border:1.5px solid var(--clay);background:var(--clay-light);color:var(--clay-deep);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer">&#10003; Mark protein goal hit today</button>
   </div>
 </div>
 
@@ -467,7 +538,7 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
     <div class="ex-card"><div class="ex-title">Reverse lunges</div><div class="ex-detail">Step one foot back, lower back knee toward the floor, push off the front foot to return. 3 x 12 each leg. Safer for knees than forward lunges. Add weight with rocks or a backpack.</div><div class="ex-form">Form tip: front knee stays over your ankle &mdash; if it's going past your toes, widen your stance</div></div>
     <div class="ex-card"><div class="ex-title">Lateral band walks</div><div class="ex-detail">Band around ankles (or just above knees). Walk sideways 20 steps each direction. Keep a slight squat throughout. Your hip abductors are what keep knees tracking straight when running.</div><div class="ex-form">Form tip: don't let feet come completely together between steps &mdash; keep constant tension on the band</div></div>
     <div class="ex-card"><div class="ex-title">Single-leg calf raises</div><div class="ex-detail">Stand on one foot, lower heel below a step edge, then rise up on the ball of your foot. 3 x 20 each side. Builds achilles tendon resilience which becomes critical as running volume increases.</div><div class="ex-form">Form tip: the lowering (eccentric) phase is where most adaptation happens &mdash; go slow on the way down</div></div>
-    <div class="ex-card"><div class="ex-title">Step-ups</div><div class="ex-detail">Step one foot onto a bench, rock, or low wall. Drive through that heel to bring your whole body up. Lower under control. 3 x 12 each leg. Directly mirrors the single-leg loading that happens in every running stride.</div></div>
+    <div class="ex-card"><div class="ex-title">Step-ups</div><div class="ex-detail">Step one foot onto a bench, rock, or low wall. Drive through that heel to bring your whole body up. Lower under control. 3 x 12 each leg. Directly mirrors the single-leg loading that happens in every running stride.<br><br><strong>No equipment?</strong> A kerb, a sturdy tree stump, your front doorstep, or any low rock or concrete edge all work perfectly — even 15–20cm of height is enough. If you genuinely can't find anything, do a slow single-leg squat instead: stand on one leg, bend to about 60 degrees, pause, come back up. Same muscles, same benefit.</div></div>
   </div>
   <div class="ref-sec">
     <h3>Strength B &mdash; beach session (Saturday) &#127944;&#65039;</h3>
@@ -681,7 +752,7 @@ function getDayConfig(week){
         {id:'tue_s2',text:'Reverse lunges',sub:'3 x 12 each leg &mdash; front knee over ankle, controlled descent'},
         {id:'tue_s3',text:'Lateral band walks',sub:'3 x 20 steps each direction &mdash; band at ankles, slight squat, constant tension'},
         {id:'tue_s4',text:'Single-leg calf raises',sub:'3 x 20 each &mdash; slow on the way down, off a step edge if possible'},
-        {id:'tue_s5',text:'Step-ups',sub:'3 x 12 each leg &mdash; drive through the heel of the top foot'}
+        {id:'tue_s5',text:'Step-ups',sub:'3 x 12 each leg &mdash; kerb, rock, doorstep or any low surface. No surface? Do slow single-leg squats instead.'}
       ]},
       {label:'Core circuit A &mdash; runner stability',tasks:[
         {id:'tue_c1',text:'Dead bug',sub:'3 x 10 each side &mdash; lower back MUST stay flat, exhale as you lower'},
@@ -955,7 +1026,8 @@ function renderSplitsLog(){
 }
 
 function updateStats(){
-  document.getElementById('stat-sess').textContent=(state.actLog||[]).length;
+  const sessions=(state.actLog||[]).filter(e=>e.day!=='Check-in').length;
+  document.getElementById('stat-sess').textContent=sessions;
   const today=new Date();today.setHours(0,0,0,0);
   let streak=0,d=new Date(today);
   while(true){const ds=d.toISOString().slice(0,10);if((state.actLog||[]).some(e=>e.ts.slice(0,10)===ds)){streak++;d.setDate(d.getDate()-1);}else break;}
@@ -987,6 +1059,7 @@ function showPanel(id,btn){
   if(btn)btn.classList.add('active');
   if(id==='log'){updateStats();document.getElementById('notes-area').value=state.notes||''}
   if(id==='cycle'){renderCycleBanner('cycle-full-banner');initCycleInputs();}
+  if(id==='calendar'){renderCalendar();}
 }
 
 function updateCountdown(){
@@ -1332,6 +1405,119 @@ function closeWorkout(){
   document.getElementById('rest-timer').classList.remove('active');
   document.getElementById('workout-overlay').classList.remove('active');
   document.body.style.overflow='';
+}
+
+// ─── CALENDAR HABIT TRACKER ──────────────────────────────
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+
+function renderCalendar() {
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = monthNames[calMonth] + ' ' + calYear;
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  const firstDay = new Date(calYear, calMonth, 1);
+  // Monday-based: Mon=0 ... Sun=6
+  let startOffset = (firstDay.getDay() + 6) % 7;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Empty cells
+  for (let i = 0; i < startOffset; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'cal-day empty';
+    grid.appendChild(empty);
+  }
+
+  let actCount = 0, waterCount = 0, proteinCount = 0;
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(calYear, calMonth, d);
+    const dateStr = date.toISOString().slice(0,10);
+    const isFuture = date > today;
+    const isToday = date.getTime() === today.getTime();
+
+    const cell = document.createElement('div');
+    cell.className = 'cal-day' + (isToday ? ' today' : '') + (isFuture ? ' future' : '');
+
+    const dayNum = document.createElement('div');
+    dayNum.className = 'cal-day-num';
+    dayNum.textContent = d;
+    cell.appendChild(dayNum);
+
+    const dots = document.createElement('div');
+    dots.className = 'cal-dots';
+
+    // Activity dot — any actLog entry on this date (excluding mood)
+    const hasActivity = (state.actLog||[]).some(e => e.ts.slice(0,10) === dateStr && e.day !== 'Check-in');
+    if (hasActivity) { const dot = document.createElement('div'); dot.className='cal-dot cal-dot-activity'; dots.appendChild(dot); actCount++; }
+
+    // Water dot — >= 8 glasses
+    const waterCount2 = (state.water||{})[dateStr] || 0;
+    if (waterCount2 >= 8) { const dot = document.createElement('div'); dot.className='cal-dot cal-dot-water'; dots.appendChild(dot); waterCount++; }
+
+    // Protein dot
+    const proteinHit = ((state.protein||{})[dateStr] || {}).goalHit;
+    if (proteinHit) { const dot = document.createElement('div'); dot.className='cal-dot cal-dot-protein'; dots.appendChild(dot); proteinCount++; }
+
+    // Cycle phase dot
+    if (!isFuture) {
+      const { cycleLength } = getCycleSettings();
+      const { lastPeriod } = getCycleSettings();
+      const start = new Date(lastPeriod); start.setHours(0,0,0,0);
+      const diff = Math.floor((date - start) / (1000*60*60*24));
+      if (diff >= 0) {
+        const day = (diff % cycleLength) + 1;
+        const phase = getPhase(day, cycleLength);
+        const phaseColors = { menstrual:'cal-dot-cycle-m', follicular:'cal-dot-cycle-f', ovulation:'cal-dot-cycle-o', luteal:'cal-dot-cycle-l' };
+        const dot = document.createElement('div');
+        dot.className = 'cal-dot ' + (phaseColors[phase]||'cal-dot-cycle-l');
+        dots.appendChild(dot);
+      }
+    }
+
+    cell.appendChild(dots);
+    grid.appendChild(cell);
+  }
+
+  document.getElementById('cal-sum-activity').textContent = actCount;
+  document.getElementById('cal-sum-water').textContent = waterCount;
+  document.getElementById('cal-sum-protein').textContent = proteinCount;
+}
+
+function calChangeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function logProtein() {
+  const grams = parseInt(document.getElementById('protein-grams').value);
+  if (!grams || grams < 0) return;
+  if (!state.protein) state.protein = {};
+  const key = getTodayKey();
+  state.protein[key] = { grams, goalHit: grams >= 100 };
+  saveState(state);
+  renderCalendar();
+  document.getElementById('protein-grams').value = '';
+  const btn = document.querySelector('#panel-calendar .save-btn');
+  const orig = btn.textContent; btn.textContent = 'Logged!';
+  setTimeout(() => btn.textContent = orig, 1200);
+}
+
+function markProteinGoal() {
+  if (!state.protein) state.protein = {};
+  const key = getTodayKey();
+  state.protein[key] = { ...(state.protein[key]||{}), goalHit: true };
+  saveState(state);
+  renderCalendar();
+  // brief feedback
+  const btn = document.querySelector('#panel-calendar button[onclick="markProteinGoal()"]');
+  const orig = btn.innerHTML; btn.innerHTML = '&#10003; Goal marked for today!';
+  setTimeout(() => btn.innerHTML = orig, 1500);
 }
 
 // ─── INIT ────────────────────────────────────────────────
