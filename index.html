@@ -266,6 +266,17 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
 .cal-sum-val{font-family:'Playfair Display',serif;font-size:22px;line-height:1}
 .cal-sum-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-top:3px}
 @media(max-width:400px){.cal-day{min-height:48px}}
+/* EXERCISE GUIDE SEARCH */
+.ex-search-wrap{position:sticky;top:0;background:var(--parchment);padding:12px 0 8px;z-index:10;margin-bottom:4px}
+.ex-search{width:100%;padding:11px 16px 11px 40px;border-radius:var(--pill);border:1.5px solid var(--border);background:var(--white);font-family:'Nunito',sans-serif;font-size:14px;color:var(--ink);outline:none}
+.ex-search:focus{border-color:var(--rose)}
+.ex-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink-soft);font-size:16px;pointer-events:none}
+.ex-search-container{position:relative}
+.ex-photo{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:8px;display:block}
+.ex-card{background:var(--white);border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:7px;transition:box-shadow .15s}
+.ex-card:hover{box-shadow:0 2px 12px rgba(90,62,43,.08)}
+.ex-card.hidden{display:none}
+.no-results{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:14px;display:none}
 </style>
 </head>
 <body>
@@ -514,86 +525,131 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
 </div>
 
 <div id="panel-reference" class="panel">
-  <div class="ref-sec">
-    <h3>Pre-run warm-up (5 min) &#127939;&#65039;&#8205;&#9792;&#65039;</h3>
-    <div class="info-box">Always dynamic before a run &mdash; never static holds. Gets blood into the joints before impact.</div>
-    <div class="ex-card"><div class="ex-title">Leg swings</div><div class="ex-detail">Stand next to a wall. 10 swings forward/back each leg, then 10 side to side. Swing from the hip socket, not the knee.</div><div class="ex-form">Form tip: keep your planted leg soft (not locked), core lightly engaged throughout</div></div>
-    <div class="ex-card"><div class="ex-title">Hip circles</div><div class="ex-detail">Hands on hips, draw big slow circles with your hips. 10 each direction per leg. Think hula hoop &mdash; really exaggerate the movement.</div><div class="ex-form">Form tip: initiate the circle from deep in the hip socket, not just moving your knees</div></div>
-    <div class="ex-card"><div class="ex-title">Walking lunges with a twist</div><div class="ex-detail">10 walking lunge steps. As you lunge, rotate your torso toward your front knee. Alternate sides with each step. Opens hips and fires up core simultaneously.</div><div class="ex-form">Form tip: front knee stays directly over your ankle &mdash; never letting it cave inward</div></div>
-    <div class="ex-card"><div class="ex-title">High knees (slow and deliberate)</div><div class="ex-detail">20 reps, lifting each knee toward hip height. This is about muscle activation, not cardio &mdash; slow and controlled, not a sprint.</div><div class="ex-form">Form tip: drive through the ball of your standing foot on each rep, not the heel</div></div>
-    <div class="ex-card"><div class="ex-title">Ankle circles + calf raises</div><div class="ex-detail">10 full slow circles each ankle, then 15 calf raises both feet. Preps the achilles tendon and ankle joint for repetitive ground impact.</div></div>
-    <div class="ex-card"><div class="ex-title">Glute kickbacks</div><div class="ex-detail">15 each side standing (hands on wall) or on all fours. Squeeze the glute hard at the top. Fires up the engine before your run does.</div><div class="ex-form">Form tip: keep hips square &mdash; don't let them rotate open as you kick</div></div>
+  <div class="ex-search-wrap">
+    <div class="ex-search-container">
+      <span class="ex-search-icon">&#128269;</span>
+      <input class="ex-search" id="ex-search-input" type="text" placeholder="Search exercises e.g. plank, lunge, glute..." oninput="searchExercises(this.value)">
+    </div>
   </div>
-  <div class="ref-sec">
-    <h3>Post-run stretch (10&ndash;15 min) &#129510;&#65039;&#8205;&#9792;&#65039;</h3>
+  <div id="no-results" class="no-results">No exercises found — try a different word</div>
+
+  <div class="ref-sec" data-section="warm-up">
+    <h3>Pre-run warm-up (5 min)</h3>
+    <div class="info-box">Always dynamic before a run — never static holds. Gets blood into the joints before impact.</div>
+    <div class="ex-card" data-ex="leg swings warm up hip"><div class="ex-title">Leg swings</div><div class="ex-detail">Stand next to a wall. 10 swings forward/back each leg, then 10 side to side. Swing from the hip socket, not the knee.</div><div class="ex-form">Form tip: keep your planted leg soft (not locked), core lightly engaged throughout</div></div>
+    <div class="ex-card" data-ex="hip circles warm up mobility"><div class="ex-title">Hip circles</div><div class="ex-detail">Hands on hips, draw big slow circles with your hips. 10 each direction per leg. Think hula hoop — really exaggerate the movement.</div><div class="ex-form">Form tip: initiate the circle from deep in the hip socket, not just moving your knees</div></div>
+    <div class="ex-card" data-ex="walking lunges twist warm up"><div class="ex-title">Walking lunges with a twist</div><div class="ex-detail">10 walking lunge steps. As you lunge, rotate your torso toward your front knee. Alternate sides. Opens hips and fires up core simultaneously.</div><div class="ex-form">Form tip: front knee stays directly over your ankle</div></div>
+    <div class="ex-card" data-ex="high knees warm up activation"><div class="ex-title">High knees (slow and deliberate)</div><div class="ex-detail">20 reps, lifting each knee toward hip height. Activation not cardio — slow and controlled.</div><div class="ex-form">Form tip: drive through the ball of your standing foot on each rep, not the heel</div></div>
+    <div class="ex-card" data-ex="ankle circles calf raises warm up"><div class="ex-title">Ankle circles + calf raises</div><div class="ex-detail">10 full slow circles each ankle, then 15 calf raises both feet. Preps the achilles and ankle joint for impact.</div></div>
+    <div class="ex-card" data-ex="glute kickbacks warm up activation"><div class="ex-title">Glute kickbacks</div><div class="ex-detail">15 each side standing (hands on wall) or on all fours. Squeeze the glute hard at the top.</div><div class="ex-form">Form tip: keep hips square — don't let them rotate open as you kick</div></div>
+  </div>
+
+  <div class="ref-sec" data-section="post-run stretch">
+    <h3>Post-run stretch (10–15 min)</h3>
     <div class="info-box">Do this within 10 minutes of finishing while still warm. On Wed and Sat, go straight into splits work right after.</div>
-    <div class="ex-card"><div class="ex-title">Standing quad stretch</div><div class="ex-detail">Hold ankle, pull heel toward glute, stand tall. 45 sec each side. Use a wall or tree for balance. Keep your hips level &mdash; don't let the stretched side hike up.</div><div class="ex-form">Form tip: squeeze the glute of the stretched leg and tuck the pelvis slightly to deepen the hip flexor component</div></div>
-    <div class="ex-card"><div class="ex-title">Standing calf stretch</div><div class="ex-detail">Hands on a wall, straight leg back with heel flat on the ground. 45 sec. Then bend that back knee for another 30 sec to target the soleus (deeper calf muscle). Each side.</div></div>
-    <div class="ex-card"><div class="ex-title">Lying hamstring stretch</div><div class="ex-detail">On your back, loop a towel or resistance band around one foot. Gently straighten leg toward the sky. Other leg stays flat on the ground. 60 sec each side.</div><div class="ex-form">Form tip: don't force the leg straight &mdash; let it find its range without the knee locking uncomfortably</div></div>
-    <div class="ex-card"><div class="ex-title">Hip flexor lunge stretch</div><div class="ex-detail">Low lunge, back knee on the ground. Sink hips forward and down. 60 sec each side. This is the single most important stretch for runners &mdash; tight hip flexors cause lower back pain and shorten stride length.</div><div class="ex-form">Form tip: tuck the tailbone under (posterior pelvic tilt) to target the hip flexor rather than just the quad</div></div>
-    <div class="ex-card"><div class="ex-title">Figure-4 glute stretch</div><div class="ex-detail">Lying on back, cross one ankle over opposite knee. Pull the uncrossed leg toward your chest. 60 sec each side. Targets the piriformis muscle which often gets tight in runners.</div></div>
-    <div class="ex-card"><div class="ex-title">Child's pose</div><div class="ex-detail">Knees wide, sit hips toward heels, arms extended forward. 90 sec. Decompresses the spine and stretches the lower back after the impact of running.</div></div>
+    <div class="ex-card" data-ex="quad stretch standing cool down"><div class="ex-title">Standing quad stretch</div><div class="ex-detail">Hold ankle, pull heel toward glute, stand tall. 45 sec each side. Keep your hips level — don't let the stretched side hike up.</div><div class="ex-form">Form tip: squeeze the glute of the stretched leg and tuck the pelvis slightly</div></div>
+    <div class="ex-card" data-ex="calf stretch standing achilles cool down"><div class="ex-title">Standing calf stretch</div><div class="ex-detail">Hands on a wall, straight leg back with heel flat. 45 sec. Then bend that back knee 30 sec for the soleus (deeper calf). Each side.</div></div>
+    <div class="ex-card" data-ex="hamstring stretch lying cool down"><div class="ex-title">Lying hamstring stretch</div><div class="ex-detail">On your back, loop a towel around one foot. Gently straighten leg toward the sky. Other leg stays flat. 60 sec each side.</div><div class="ex-form">Form tip: don't force the leg straight — let it find its range</div></div>
+    <div class="ex-card" data-ex="hip flexor lunge stretch cool down runner"><div class="ex-title">Hip flexor lunge stretch</div><div class="ex-detail">Low lunge, back knee on ground. Sink hips forward and down. 60 sec each side. Most important stretch for runners — tight hip flexors cause lower back pain and shorten stride.</div><div class="ex-form">Form tip: tuck the tailbone under to target the hip flexor rather than just the quad</div></div>
+    <div class="ex-card" data-ex="figure 4 glute piriformis stretch"><div class="ex-title">Figure-4 glute stretch</div><div class="ex-detail">Lying on back, cross one ankle over opposite knee. Pull uncrossed leg toward chest. 60 sec each side. Targets the piriformis which gets tight in runners.</div></div>
+    <div class="ex-card" data-ex="childs pose back stretch cool down"><div class="ex-title">Child's pose</div><div class="ex-detail">Knees wide, sit hips toward heels, arms extended forward. 90 sec. Decompresses the spine after running.</div></div>
   </div>
-  <div class="ref-sec">
-    <h3>Core circuit A &mdash; runner stability (Tuesday) &#127744;</h3>
-    <div class="ex-card"><div class="ex-title">Dead bug</div><div class="ex-detail">Lie on back, arms up, knees at 90 degrees. Slowly lower opposite arm and leg toward the floor, return. 3 x 10 each side. Your lower back MUST stay flat against the floor the entire time &mdash; if it lifts, you've gone too far.</div><div class="ex-form">Form tip: exhale as you lower the limbs. Breath helps keep the core braced and the back down</div></div>
-    <div class="ex-card"><div class="ex-title">Hollow body hold</div><div class="ex-detail">Lie on back, press lower back flat, lift arms overhead and legs to about 45 degrees. Hold 20&ndash;30 sec for 3 rounds. You should look like a shallow banana. Builds the deep core that holds your posture in the last 2km of a race.</div><div class="ex-form">Form tip: if your lower back lifts, raise your legs higher until it stays flat</div></div>
-    <div class="ex-card"><div class="ex-title">Plank with shoulder taps</div><div class="ex-detail">In a strong plank, tap opposite shoulder alternately. 3 x 20 taps. The challenge is keeping your hips perfectly still as you lift each hand. This is anti-rotation core work &mdash; exactly what running demands.</div><div class="ex-form">Form tip: widen your feet for stability. No hip sway allowed</div></div>
-    <div class="ex-card"><div class="ex-title">Side plank</div><div class="ex-detail">On forearm, body in one straight diagonal line, hips lifted. 3 x 30 sec each side. Builds the lateral hip stability that protects your knees with every stride.</div><div class="ex-form">Form tip: don't let the bottom hip sag. Stack your feet or stagger them for more stability</div></div>
-    <div class="ex-card"><div class="ex-title">Glute bridge march</div><div class="ex-detail">In a glute bridge (hips raised), lift one foot slightly, hold 2 sec, switch. 3 x 10 each leg. Challenges glute and core to stabilise together &mdash; exactly what happens in each stride when you're on one leg.</div></div>
+
+  <div class="ref-sec" data-section="core a runner stability">
+    <h3>Core circuit A — runner stability (Tuesday)</h3>
+    <div class="ex-card" data-ex="dead bug core stability lower back">
+      <img class="ex-photo" src="https://www.mensjournal.com/_next/image?url=https%3A%2F%2Fwww.mensjournal.com%2Fwp-content%2Fuploads%2F2021%2F04%2Fdead-bug.jpg&w=1200&q=75" alt="Dead bug exercise" onerror="this.style.display='none'">
+      <div class="ex-title">Dead bug</div><div class="ex-detail">Lie on back, arms up, knees at 90 degrees. Slowly lower opposite arm and leg toward the floor, return. 3 x 10 each side. Lower back MUST stay flat — if it lifts, you have gone too far.</div><div class="ex-form">Form tip: exhale as you lower the limbs. Breath braces the core and keeps the back down</div></div>
+    <div class="ex-card" data-ex="hollow body hold core banana position">
+      <img class="ex-photo" src="https://i.ytimg.com/vi/LlDNef_Ztsc/maxresdefault.jpg" alt="Hollow body hold" onerror="this.style.display='none'">
+      <div class="ex-title">Hollow body hold</div><div class="ex-detail">Lie on back, press lower back flat, lift arms overhead and legs to about 45 degrees. Hold 25–45 sec (increases each week). Banana shape. Builds the deep core that holds your posture in the last 2km of a race.</div><div class="ex-form">Form tip: if your lower back lifts, raise your legs higher until it stays flat</div></div>
+    <div class="ex-card" data-ex="plank shoulder taps core anti rotation stability">
+      <div class="ex-title">Plank with shoulder taps</div><div class="ex-detail">In a strong plank, tap opposite shoulder alternately. 3 x 20 taps. Hips stay perfectly still. Anti-rotation core work — exactly what running demands.</div><div class="ex-form">Form tip: widen your feet for stability. Zero hip sway allowed</div></div>
+    <div class="ex-card" data-ex="side plank lateral core hip stability">
+      <img class="ex-photo" src="https://www.bodybuilding-wizard.com/wp-content/uploads/2014/03/side-plank-1.jpg" alt="Side plank" onerror="this.style.display='none'">
+      <div class="ex-title">Side plank</div><div class="ex-detail">On forearm, body in one straight diagonal line, hips lifted. 3 x 25–45 sec each side (increases each week). Builds lateral hip stability that protects your knees with every stride.</div><div class="ex-form">Form tip: don't let the bottom hip sag. Stack your feet or stagger them for stability</div></div>
+    <div class="ex-card" data-ex="glute bridge march core hip stability single leg">
+      <div class="ex-title">Glute bridge march</div><div class="ex-detail">In a glute bridge (hips raised), lift one foot slightly, hold 2 sec, switch. 3 x 10 each leg. Challenges glute and core to stabilise together — exactly what happens in each stride.</div></div>
   </div>
-  <div class="ref-sec">
-    <h3>Core circuit B &mdash; strength (Thursday) &#128293;</h3>
-    <div class="ex-card"><div class="ex-title">Bicycle crunches</div><div class="ex-detail">Hands behind head, rotate elbow to opposite knee while extending the other leg. 3 x 20 reps, SLOW. Slower = more effective. The rotation comes from your ribcage, not your neck.</div><div class="ex-form">Form tip: keep your lower back pressed to the floor &mdash; if it arches, you've lost the contraction</div></div>
-    <div class="ex-card"><div class="ex-title">Leg raises</div><div class="ex-detail">Lying on back, legs straight (or slightly bent). Lower from 90 degrees slowly to just above the floor. 3 x 12. The lowering phase is where the work happens &mdash; go as slow as you can. If your back lifts, bend your knees more.</div></div>
-    <div class="ex-card"><div class="ex-title">Russian twists</div><div class="ex-detail">Seated, leaning back at about 45 degrees, feet lifted or on the floor. Rotate side to side touching the ground each time. 3 x 20. Hold a water bottle for extra resistance. Keep the chest tall throughout.</div></div>
-    <div class="ex-card"><div class="ex-title">Mountain climbers</div><div class="ex-detail">In a solid plank, drive knees to chest alternately at a controlled pace. 3 x 30 sec. Don't let the hips rise. Core endurance plus cardio in one exercise.</div><div class="ex-form">Form tip: find the pace where you can still breathe through your nose &mdash; that's your working pace</div></div>
-    <div class="ex-card"><div class="ex-title">Superman hold</div><div class="ex-detail">Face down, arms extended overhead. Lift arms, chest and legs simultaneously. Hold 2 sec at the top, lower slowly. 3 x 12. Lower back strength &mdash; the forgotten component of a strong core.</div></div>
+
+  <div class="ref-sec" data-section="core b strength toning ab">
+    <h3>Core circuit B — strength and toning (Thu + Sat)</h3>
+    <div class="ex-card" data-ex="bicycle crunches ab oblique core">
+      <img class="ex-photo" src="https://fitnessvolt.com/wp-content/uploads/2022/07/Bicycle-Crunch.jpg" alt="Bicycle crunches" onerror="this.style.display='none'">
+      <div class="ex-title">Bicycle crunches</div><div class="ex-detail">Hands behind head, rotate elbow to opposite knee while extending the other leg. 3–4 x 16–24 SLOW reps. The slower you go, the harder it is — that is the whole point.</div><div class="ex-form">Form tip: rotation from your ribcage, not your neck. Lower back stays pressed to floor</div></div>
+    <div class="ex-card" data-ex="leg raises lower ab core hip flexor">
+      <div class="ex-title">Leg raises</div><div class="ex-detail">Lying on back, legs straight or slightly bent. Lower from 90 degrees slowly to just above the floor. 3–4 x 12–18. The lowering phase is the work — go as slow as you can.</div><div class="ex-form">Form tip: if back arches, bend your knees more or raise the stopping point</div></div>
+    <div class="ex-card" data-ex="russian twists oblique rotation core">
+      <div class="ex-title">Russian twists</div><div class="ex-detail">Seated, lean back 45 degrees, rotate side to side touching the ground each time. 3–4 x 20–28. Hold a water bottle for load. Chest stays tall throughout.</div></div>
+    <div class="ex-card" data-ex="mountain climbers core cardio plank conditioning">
+      <img class="ex-photo" src="https://fitnessvolt.com/wp-content/uploads/2019/09/mountain-climbers.jpg" alt="Mountain climbers" onerror="this.style.display='none'">
+      <div class="ex-title">Mountain climbers</div><div class="ex-detail">In a solid plank, drive knees to chest alternately. 3–4 x 30–45 sec. Don't let the hips rise. Core endurance and cardio in one.</div><div class="ex-form">Form tip: find the pace where you can still breathe through your nose — that's your working pace</div></div>
+    <div class="ex-card" data-ex="superman hold back extension lower back erector">
+      <div class="ex-title">Superman hold</div><div class="ex-detail">Face down, arms extended overhead. Lift arms, chest and legs simultaneously. Hold 2 sec at top, lower slowly. 3 x 12. Lower back strength — the forgotten part of core training.</div></div>
+    <div class="ex-card" data-ex="plank hold core full body stability">
+      <div class="ex-title">Plank hold</div><div class="ex-detail">Body in one straight line head to heels. 3 x 45–60 sec. Squeeze everything — glutes, core, quads.</div><div class="ex-form">Form tip: don't let hips drop or pike up. Imagine a rod running from head to heels</div></div>
+    <div class="ex-card" data-ex="toe touches upper ab crunch core">
+      <div class="ex-title">Toe touches</div><div class="ex-detail">Legs straight up, reach fingertips toward toes. 3 x 18–20. Full crunch at the top, squeeze hard.</div><div class="ex-form">Form tip: lift your shoulder blades completely off the floor at the top</div></div>
   </div>
-  <div class="ref-sec">
-    <h3>Upper body (Thursday) &#128170;</h3>
-    <div class="ex-card"><div class="ex-title">Push-up (follow your progression)</div><div class="ex-detail">3 sets at current level from the push-up tracker. Rest 60&ndash;90 sec between sets. Every variation counts &mdash; progress is progress.</div><div class="ex-form">Form tip for all push-up variations: hands slightly wider than shoulders, body completely straight, elbows track back at 45 degrees &mdash; not flared out sideways</div></div>
-    <div class="ex-card"><div class="ex-title">Resistance band rows</div><div class="ex-detail">Anchor band to a tree, fence, or post at chest height. Stand back until there's tension. Pull both elbows back simultaneously, squeezing shoulder blades together. 3 x 15. Builds the back strength that makes push-ups significantly easier.</div><div class="ex-form">Form tip: shoulders stay down away from your ears throughout the movement &mdash; no shrugging</div></div>
-    <div class="ex-card"><div class="ex-title">Band pull-aparts</div><div class="ex-detail">Hold band at chest height, arms extended forward. Pull apart to a T shape, squeezing shoulder blades at the end. 3 x 20. Excellent for posture and rear shoulder strength.</div></div>
-    <div class="ex-card"><div class="ex-title">Pike push-ups</div><div class="ex-detail">Start in a downward dog (hips high, V-shape). Bend elbows to lower top of head toward the floor, push back up. 3 x 8&ndash;10. Heavy shoulder targeting. Bend knees to make it more manageable.</div></div>
-    <div class="ex-card"><div class="ex-title">Tricep dips</div><div class="ex-detail">Hands on a bench, chair, or low wall behind you. Lower by bending elbows to 90 degrees, press back up. 3 x 10. Critical for the push-up lockout &mdash; the top portion where triceps do most of the work.</div><div class="ex-form">Form tip: keep your back close to the surface, elbows pointing straight back not out to the sides</div></div>
+
+  <div class="ref-sec" data-section="upper body push-up arms shoulders">
+    <h3>Upper body (Thursday)</h3>
+    <div class="ex-card" data-ex="push up chest arms tricep progression">
+      <div class="ex-title">Push-up (follow your progression)</div><div class="ex-detail">3 sets at current level from the push-up tracker. Rest 60–90 sec between sets. Every variation counts.</div><div class="ex-form">Form tip: hands wider than shoulders, body completely straight, elbows track back at 45 degrees — not flared sideways</div></div>
+    <div class="ex-card" data-ex="resistance band rows back posture shoulder blade">
+      <div class="ex-title">Resistance band rows</div><div class="ex-detail">Anchor band at chest height. Pull both elbows back simultaneously, squeezing shoulder blades. 3 x 15. Builds the back strength that makes push-ups easier.</div><div class="ex-form">Form tip: shoulders stay DOWN away from ears throughout — no shrugging</div></div>
+    <div class="ex-card" data-ex="band pull aparts rear shoulder posture rotator cuff">
+      <div class="ex-title">Band pull-aparts</div><div class="ex-detail">Hold band at chest height, arms extended. Pull apart to a T shape, squeezing shoulder blades. 3 x 20. Great for posture and rear shoulder strength.</div></div>
+    <div class="ex-card" data-ex="pike push ups shoulders overhead press">
+      <div class="ex-title">Pike push-ups</div><div class="ex-detail">Hips high in a V shape (downward dog). Bend elbows to lower top of head toward floor, push back up. 3 x 8–10. Heavy shoulder targeting. Bend knees to make easier.</div></div>
+    <div class="ex-card" data-ex="tricep dips triceps arms lockout">
+      <div class="ex-title">Tricep dips</div><div class="ex-detail">Hands on a bench or low wall behind you. Lower by bending elbows to 90 degrees, press back up. 3 x 10. Critical for the push-up lockout at the top.</div><div class="ex-form">Form tip: elbows point straight BACK, not out to the sides</div></div>
   </div>
-  <div class="ref-sec">
-    <h3>Strength A &mdash; lower body (Tuesday) &#129462;</h3>
-    <div class="ex-card"><div class="ex-title">Single-leg glute bridges</div><div class="ex-detail">Lie on back, one foot flat on the floor, other leg extended straight up. Drive through the planted heel to lift hips. 3 x 15 each side. The most important exercise for preventing running knee injuries.</div><div class="ex-form">Form tip: squeeze the glute hard at the top and hold 1 sec. Hips stay level &mdash; not twisted to one side</div></div>
-    <div class="ex-card"><div class="ex-title">Reverse lunges</div><div class="ex-detail">Step one foot back, lower back knee toward the floor, push off the front foot to return. 3 x 12 each leg. Safer for knees than forward lunges. Add weight with rocks or a backpack.</div><div class="ex-form">Form tip: front knee stays over your ankle &mdash; if it's going past your toes, widen your stance</div></div>
-    <div class="ex-card"><div class="ex-title">Lateral band walks</div><div class="ex-detail">Band around ankles (or just above knees). Walk sideways 20 steps each direction. Keep a slight squat throughout. Your hip abductors are what keep knees tracking straight when running.</div><div class="ex-form">Form tip: don't let feet come completely together between steps &mdash; keep constant tension on the band</div></div>
-    <div class="ex-card"><div class="ex-title">Single-leg calf raises</div><div class="ex-detail">Stand on one foot, lower heel below a step edge, then rise up on the ball of your foot. 3 x 20 each side. Builds achilles tendon resilience which becomes critical as running volume increases.</div><div class="ex-form">Form tip: the lowering (eccentric) phase is where most adaptation happens &mdash; go slow on the way down</div></div>
-    <div class="ex-card"><div class="ex-title">Step-ups</div><div class="ex-detail">Step one foot onto a bench, rock, or low wall. Drive through that heel to bring your whole body up. Lower under control. 3 x 12 each leg. Directly mirrors the single-leg loading that happens in every running stride.<br><br><strong>No equipment?</strong> A kerb, a sturdy tree stump, your front doorstep, or any low rock or concrete edge all work perfectly — even 15–20cm of height is enough. If you genuinely can't find anything, do a slow single-leg squat instead: stand on one leg, bend to about 60 degrees, pause, come back up. Same muscles, same benefit.</div></div>
+
+  <div class="ref-sec" data-section="lower body legs glute quad hamstring">
+    <h3>Strength A — lower body (Tuesday)</h3>
+    <div class="ex-card" data-ex="single leg glute bridge lower body hip runner knee">
+      <img class="ex-photo" src="https://www.verywellfit.com/thmb/WBM14MPhW7pNTGS3IbCwkRU0kI8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/single-leg-glute-bridge-4157948-02-15ca3e7e8d984012b7b0e1a8d18bdfc4.jpg" alt="Single leg glute bridge" onerror="this.style.display='none'">
+      <div class="ex-title">Single-leg glute bridges</div><div class="ex-detail">Lie on back, one foot flat on floor, other leg up. Drive through planted heel to lift hips. 3 x 15 each side. Most important exercise for preventing running knee injuries.</div><div class="ex-form">Form tip: squeeze the glute hard at the top for 1 second. Hips stay level — not twisted</div></div>
+    <div class="ex-card" data-ex="reverse lunge leg quad glute balance">
+      <div class="ex-title">Reverse lunges</div><div class="ex-detail">Step one foot back, lower back knee toward floor, push off front foot to return. 3 x 12 each leg. Safer for knees than forward lunges. Add weight with rocks or a backpack.</div><div class="ex-form">Form tip: front knee stays over your ankle — if past your toes, widen your stance</div></div>
+    <div class="ex-card" data-ex="lateral band walks hip abductor glute med knee tracking">
+      <div class="ex-title">Lateral band walks</div><div class="ex-detail">Band around ankles, walk sideways 20 steps each direction. Slight squat throughout. Hip abductors keep knees tracking straight when running — this is their direct training.</div><div class="ex-form">Form tip: feet never fully together — keep constant tension on the band</div></div>
+    <div class="ex-card" data-ex="single leg calf raises achilles ankle strength">
+      <div class="ex-title">Single-leg calf raises</div><div class="ex-detail">Stand on one foot, lower heel below a step edge, rise up on ball of foot. 3 x 20 each side. Builds achilles tendon resilience — critical as running volume increases.</div><div class="ex-form">Form tip: the slow lowering (eccentric) phase is where most adaptation happens</div></div>
+    <div class="ex-card" data-ex="step ups single leg functional leg power">
+      <div class="ex-title">Step-ups</div><div class="ex-detail">Step one foot onto a kerb, rock, doorstep, or any low surface (15–20cm is plenty). Drive through that heel to lift your body up. 3 x 12 each leg.<br><br><strong>No surface?</strong> Do slow single-leg squats instead — stand on one leg, bend to 60 degrees, pause, stand. Same muscles, same benefit.</div></div>
   </div>
-  <div class="ref-sec">
-    <h3>Strength B &mdash; beach session (Saturday) &#127944;&#65039;</h3>
-    <div class="ex-card"><div class="ex-title">Sand sprints (15&ndash;20m)</div><div class="ex-detail">6&ndash;8 reps. Flat out effort for 15&ndash;20m. Walk slowly back, fully recover (1&ndash;2 min), then go again. Sand massively increases resistance and reduces joint impact. Go barefoot on firm sand.</div><div class="ex-form">Form tip: lean forward slightly from the ankles (not the waist), drive your knees up high, pump your arms hard and fast</div></div>
-    <div class="ex-card"><div class="ex-title">Jump squats</div><div class="ex-detail">Squat to about 90 degrees, then explode upward. Land softly with bent knees, absorbing the impact. 3 x 12 on sand. The soft surface makes landings more forgiving while the push-off is harder.</div></div>
-    <div class="ex-card"><div class="ex-title">Push-up variation (extra practice)</div><div class="ex-detail">2 sets at current level. A second weekly push-up session is one of the fastest ways to accelerate progress &mdash; frequency is more important than volume when you're building a new movement pattern.</div></div>
-    <div class="ex-card"><div class="ex-title">Bear crawls</div><div class="ex-detail">Knees hovering just above the sand, crawl forward 20m. Keep hips LOW &mdash; resist the urge to stick your bum in the air. Full body: core, shoulders, hips, wrists, coordination. Sand makes this dramatically harder than it looks.</div></div>
-    <div class="ex-card"><div class="ex-title">Resistance band rows (anchored)</div><div class="ex-detail">Anchor to a post or tree. 3 x 15 with same technique as Thursday. Second back strength session per week &mdash; upper body balance for running posture.</div></div>
+
+  <div class="ref-sec" data-section="beach strength power sprint sand">
+    <h3>Strength B — beach session (Saturday)</h3>
+    <div class="ex-card" data-ex="sand sprints speed power conditioning"><div class="ex-title">Sand sprints (15–20m)</div><div class="ex-detail">6–8 reps. Flat out, fully recover between each (1–2 min walk back). Sand increases resistance and reduces joint impact. Barefoot on firm sand is ideal.</div><div class="ex-form">Form tip: lean from ankles not waist, drive knees high, pump arms hard and fast</div></div>
+    <div class="ex-card" data-ex="jump squats explosive power plyometric legs"><div class="ex-title">Jump squats</div><div class="ex-detail">Squat to 90 degrees, explode upward. Land softly with bent knees — absorb the impact. 3 x 12. Sand makes landings more forgiving.</div></div>
+    <div class="ex-card" data-ex="push up variation extra practice chest arms"><div class="ex-title">Push-up variation (extra practice)</div><div class="ex-detail">2 sets at current level. A second weekly push-up session accelerates progress faster than doing more sets in one day.</div></div>
+    <div class="ex-card" data-ex="bear crawls full body core shoulder coordination"><div class="ex-title">Bear crawls</div><div class="ex-detail">Knees hovering low above sand, crawl forward 20m. Keep hips DOWN — resist sticking bum up. Full body: core, shoulders, hips, coordination. Sand makes this dramatically harder.</div></div>
+    <div class="ex-card" data-ex="resistance band rows back shoulder posture beach"><div class="ex-title">Resistance band rows (anchored)</div><div class="ex-detail">Anchor to a post or tree. 3 x 15 same technique as Thursday. Second back strength session of the week.</div></div>
   </div>
-  <div class="ref-sec">
-    <h3>Splits routine (20 min) &mdash; warm muscles only &#129338;&#65039;</h3>
+
+  <div class="ref-sec" data-section="splits flexibility hip flexor">
+    <h3>Splits routine (20 min) — warm muscles only</h3>
     <div class="info-box">Always after running or a warm-up. Cold stretching does almost nothing. Warm muscle is pliable muscle.</div>
-    <div class="ex-card"><div class="ex-title">Low lunge hold</div><div class="ex-detail">Step into a lunge, back knee on the ground. Sink hips forward and down. Feel the stretch through the front of your back hip. 2 min each side. This is the primary exercise for front splits.</div><div class="ex-form">Form tip: tuck your tailbone under and gently push the back hip toward the floor throughout</div></div>
-    <div class="ex-card"><div class="ex-title">Pigeon pose</div><div class="ex-detail">From a plank, slide one knee forward toward the opposite wrist. Shin diagonal (or parallel). Lower your torso over the front leg. 2 min each side. Deep glute and hip external rotation.</div><div class="ex-form">Form tip: flex the front foot to protect the knee. Place a folded towel under the hip if it floats off the ground</div></div>
-    <div class="ex-card"><div class="ex-title">Hamstring stretch (progressive)</div><div class="ex-detail">Weeks 1&ndash;4: seated forward fold reaching toward feet. Weeks 5&ndash;8: prop one heel on a step, lean forward. Weeks 9&ndash;12: active straight-leg stretch. 90 sec each side throughout.</div></div>
-    <div class="ex-card"><div class="ex-title">Active split hold</div><div class="ex-detail">Weeks 1&ndash;2: high lunge with hands on floor. Weeks 3&ndash;5: lower hips, hands still down. Weeks 6&ndash;9: hips hovering low. Weeks 10&ndash;12: full extension attempt. Hold 60&ndash;90 sec each side &mdash; breathe and relax into it.</div><div class="ex-form">Form tip: keep hips square for front splits &mdash; don't let the back hip rotate open</div></div>
-    <div class="ex-card"><div class="ex-title">Butterfly stretch</div><div class="ex-detail">Seated, soles of feet together. Hold feet, let knees fall open. 60 sec. Can press elbows into inner thighs to increase. Targets adductors for middle splits progress.</div></div>
-    <div class="ex-card"><div class="ex-title">Frog pose</div><div class="ex-detail">On all fours, walk knees as wide as comfortable. Let hips sink toward the floor. 90 sec. The deepest adductor stretch &mdash; the final thing to open before middle splits. Go slow and breathe.</div></div>
+    <div class="ex-card" data-ex="low lunge hip flexor stretch splits flexibility"><div class="ex-title">Low lunge hold</div><div class="ex-detail">Step into a lunge, back knee on ground. Sink hips forward and down. 2 min each side. Primary exercise for front splits.</div><div class="ex-form">Form tip: tuck your tailbone under and gently push the back hip toward the floor</div></div>
+    <div class="ex-card" data-ex="pigeon pose hip external rotation glute splits flexibility"><div class="ex-title">Pigeon pose</div><div class="ex-detail">From a plank, slide one knee forward toward opposite wrist. Lower torso over front leg. 2 min each side. Deep glute and hip external rotation.</div><div class="ex-form">Form tip: flex front foot to protect knee. Place towel under hip if it floats off ground</div></div>
+    <div class="ex-card" data-ex="hamstring stretch progressive flexibility splits"><div class="ex-title">Hamstring stretch (progressive)</div><div class="ex-detail">Weeks 1–4: seated forward fold. Weeks 5–8: heel on step. Weeks 9–12: active straight-leg stretch. 90 sec each side.</div></div>
+    <div class="ex-card" data-ex="active split hold front splits flexibility"><div class="ex-title">Active split hold</div><div class="ex-detail">Weeks 1–2: high lunge hands on floor. Weeks 3–5: hips lower. Weeks 6–9: hovering low. Weeks 10–12: full extension attempt. 60–90 sec each side.</div><div class="ex-form">Form tip: keep hips square — don't let the back hip rotate open</div></div>
+    <div class="ex-card" data-ex="butterfly stretch inner groin adductor splits"><div class="ex-title">Butterfly stretch</div><div class="ex-detail">Seated, soles of feet together. Let knees fall open. 60 sec. Press elbows into inner thighs to increase. Targets adductors for middle splits.</div></div>
+    <div class="ex-card" data-ex="frog pose inner groin adductor deep flexibility splits"><div class="ex-title">Frog pose</div><div class="ex-detail">On all fours, walk knees as wide as comfortable. Hips sink toward floor. 90 sec. Deepest adductor stretch — last thing to open before middle splits.</div></div>
   </div>
-  <div class="ref-sec">
-    <h3>General mobility (Saturday after beach) &#127744;</h3>
-    <div class="ex-card"><div class="ex-title">90-90 hip switch</div><div class="ex-detail">Sit with both legs bent at 90 degrees &mdash; one in front, one to the side. Rotate between internal and external hip rotation. 10 slow reps each side. The best all-round hip mobility drill available.</div></div>
-    <div class="ex-card"><div class="ex-title">World's greatest stretch</div><div class="ex-detail">From a lunge, plant same-side hand inside the front foot. Reach the other arm to the sky, rotating your torso open. Then bring that arm down and thread it under your body. 5 reps each side. Hits hip flexor, thoracic spine, and hamstring simultaneously.</div></div>
-    <div class="ex-card"><div class="ex-title">Thoracic spine rotations</div><div class="ex-detail">On all fours, one hand behind your head. Rotate that elbow up toward the ceiling, following with your eyes. 10 each side. Counteracts the forward-hunching posture from desk work and running.</div></div>
-    <div class="ex-card"><div class="ex-title">Deep squat hold</div><div class="ex-detail">Feet shoulder-width, toes slightly out. Squat as deep as you can and hold 60&ndash;90 sec. Use a doorframe or post for balance if needed. Opens ankles, hips, and groin simultaneously.</div></div>
+
+  <div class="ref-sec" data-section="mobility hip rotation thoracic">
+    <h3>General mobility (Saturday after beach)</h3>
+    <div class="ex-card" data-ex="90 90 hip switch mobility internal external rotation"><div class="ex-title">90-90 hip switch</div><div class="ex-detail">Sit with both legs at 90 degrees — one in front, one to side. Rotate between internal and external hip rotation. 10 slow reps each side. Best all-round hip mobility drill.</div></div>
+    <div class="ex-card" data-ex="worlds greatest stretch full body mobility hip thoracic hamstring"><div class="ex-title">World's greatest stretch</div><div class="ex-detail">From a lunge, plant same-side hand inside front foot. Reach other arm to sky rotating torso open. Then thread that arm under body. 5 reps each side. Hits hip flexor, thoracic spine, and hamstring simultaneously.</div></div>
+    <div class="ex-card" data-ex="thoracic spine rotation upper back mobility posture"><div class="ex-title">Thoracic spine rotations</div><div class="ex-detail">On all fours, one hand behind head. Rotate that elbow up toward ceiling. 10 each side. Counteracts the forward-hunching from desk work and running.</div></div>
+    <div class="ex-card" data-ex="deep squat hold ankle hip mobility flexibility"><div class="ex-title">Deep squat hold</div><div class="ex-detail">Feet shoulder-width, toes slightly out. Squat as deep as possible, hold 60–90 sec. Use a doorframe for balance if needed. Opens ankles, hips, and groin simultaneously.</div></div>
   </div>
 </div>
 
-</div>
 
 <!-- WORKOUT MODE OVERLAY -->
 <div class="workout-overlay" id="workout-overlay">
@@ -913,9 +969,47 @@ function getTaskKey(w,id){return'w'+w+'_'+id}
 function isTaskDone(w,id){return!!(state.tasks[getTaskKey(w,id)])}
 function toggleTask(w,id){
   const k=getTaskKey(w,id);
-  if(state.tasks[k]){const ts=state.tasks[k].ts;delete state.tasks[k];state.actLog=(state.actLog||[]).filter(e=>!(e.ts===ts&&e.tid===id));}
-  else{const ts=new Date().toISOString();state.tasks[k]={ts};const days=getDayConfig(w);const dc=days.find(d=>d.sections.some(s=>s.tasks.some(t=>t.id===id)));const tc=dc?dc.sections.flatMap(s=>s.tasks).find(t=>t.id===id):null;if(!state.actLog)state.actLog=[];state.actLog.unshift({ts,label:tc?tc.text:id,day:dc?dc.name:'',tid:id});if(state.actLog.length>200)state.actLog=state.actLog.slice(0,200);}
-  saveState(state);renderWeek();
+  if(state.tasks[k]){
+    const ts=state.tasks[k].ts;
+    delete state.tasks[k];
+    state.actLog=(state.actLog||[]).filter(e=>!(e.ts===ts&&e.tid===id));
+  } else {
+    const ts=new Date().toISOString();
+    state.tasks[k]={ts};
+    const days=getDayConfig(w);
+    const dc=days.find(d=>d.sections.some(s=>s.tasks.some(t=>t.id===id)));
+    const tc=dc?dc.sections.flatMap(s=>s.tasks).find(t=>t.id===id):null;
+    if(!state.actLog)state.actLog=[];
+    state.actLog.unshift({ts,label:tc?tc.text:id,day:dc?dc.name:'',tid:id});
+    if(state.actLog.length>200)state.actLog=state.actLog.slice(0,200);
+  }
+  saveState(state);
+
+  // Update just this task element — no full re-render so card stays open
+  const taskEl=document.querySelector(`[data-task-id="${id}"]`);
+  const isDone=isTaskDone(w,id);
+  if(taskEl){
+    taskEl.classList.toggle('done',isDone);
+  }
+
+  // Update progress bar and done badge without re-rendering
+  const days=getDayConfig(w);
+  let total=0,done=0;
+  days.forEach(d=>d.sections.forEach(s=>s.tasks.forEach(t=>{total++;if(isTaskDone(w,t.id))done++;})));
+  const pct=total?Math.round(done/total*100):0;
+  const pctEl=document.getElementById('week-pct');
+  const fillEl=document.getElementById('week-fill');
+  if(pctEl)pctEl.textContent=pct+'%';
+  if(fillEl)fillEl.style.width=pct+'%';
+
+  // Update this day's done badge
+  const dayConf=days.find(d=>d.sections.some(s=>s.tasks.some(t=>t.id===id)));
+  if(dayConf){
+    let dt=0,dd=0;
+    dayConf.sections.forEach(s=>s.tasks.forEach(t=>{dt++;if(isTaskDone(w,t.id))dd++;}));
+    const badge=document.querySelector('#day-card-'+dayConf.key+' .done-badge');
+    if(badge)badge.classList.toggle('show',dt>0&&dd===dt);
+  }
 }
 
 function getTagClass(t){return{run:'tag-run',str:'tag-str',mob:'tag-mob',core:'tag-core',upper:'tag-upper',rest:'tag-rest'}[t]||'tag-rest'}
@@ -952,7 +1046,7 @@ function renderWeek(){
     <div class="day-body">${day.sections.map(sec=>`
       <div class="tsec"><div class="tsec-label">${sec.label}</div>
       ${sec.tasks.map(task=>{const dn=isTaskDone(currentWeek,task.id);return`
-        <div class="task${dn?' done':''}" onclick="toggleTask(${currentWeek},'${task.id}')">
+        <div class="task${dn?' done':''}" data-task-id="${task.id}" onclick="event.stopPropagation();toggleTask(${currentWeek},'${task.id}')">
           <div class="tcheck"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div><div class="ttext">${task.text}</div><div class="tsub">${task.sub}</div></div>
         </div>`;}).join('')}
@@ -1822,6 +1916,38 @@ function renderProteinDisplay() {
     entries.slice().reverse().map(e =>
       '<div class="log-entry"><div class="log-dot" style="background:var(--clay)"></div><div style="font-weight:700;color:var(--clay-deep);min-width:40px">' + e.grams + 'g</div><div style="flex:1;color:var(--ink-mid)">' + e.food + '</div></div>'
     ).join('');
+}
+
+// ─── EXERCISE GUIDE SEARCH ───────────────────────────────
+function searchExercises(query) {
+  const q = query.toLowerCase().trim();
+  const cards = document.querySelectorAll('#panel-reference .ex-card');
+  const sections = document.querySelectorAll('#panel-reference .ref-sec');
+  const noResults = document.getElementById('no-results');
+  let anyVisible = false;
+
+  if (!q) {
+    cards.forEach(c => c.classList.remove('hidden'));
+    sections.forEach(s => s.style.display = '');
+    noResults.style.display = 'none';
+    return;
+  }
+
+  // Hide/show individual cards
+  cards.forEach(card => {
+    const text = (card.dataset.ex || '') + ' ' + card.textContent;
+    const match = q.split(' ').every(word => text.toLowerCase().includes(word));
+    card.classList.toggle('hidden', !match);
+    if (match) anyVisible = true;
+  });
+
+  // Hide sections where all cards are hidden
+  sections.forEach(sec => {
+    const visibleCards = sec.querySelectorAll('.ex-card:not(.hidden)');
+    sec.style.display = visibleCards.length === 0 ? 'none' : '';
+  });
+
+  noResults.style.display = anyVisible ? 'none' : 'block';
 }
 
 // ─── INIT ────────────────────────────────────────────────
