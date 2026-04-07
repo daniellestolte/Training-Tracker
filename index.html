@@ -337,6 +337,17 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
       <span style="font-size:12px;color:var(--ink-soft);margin-left:4px">Low &rarr; High</span>
     </div>
   </div>
+  <!-- PROTEIN QUICK VIEW -->
+  <div style="background:var(--clay-light);border:1.5px solid rgba(140,90,40,.18);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700;color:var(--clay-deep)">Protein today</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--clay-deep)" id="protein-quick-grams">—</div>
+    </div>
+    <div style="height:7px;background:var(--parchment-dark);border-radius:99px;overflow:hidden;margin-bottom:6px">
+      <div id="protein-quick-bar" style="height:100%;background:linear-gradient(90deg,var(--clay),var(--rose));border-radius:99px;transition:width .4s;width:0%"></div>
+    </div>
+    <div style="font-size:11px;color:var(--ink-soft);font-weight:600" id="protein-quick-label">Log in the Calendar tab</div>
+  </div>
   <div class="water-card">
     <div class="water-title">&#128167; Water tracker &mdash; today's goal: 2.5L (10 glasses)</div>
     <div class="water-drops" id="water-drops"></div>
@@ -422,14 +433,24 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
     </div>
   </div>
   <div class="cal-card">
-    <h3>&#129385; Log today's protein</h3>
-    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">Target: 1.6&ndash;2g per kg bodyweight. Tap to mark goal hit, or log your grams.</p>
-    <div class="protein-log-row">
-      <label>Grams today</label>
-      <input type="number" id="protein-grams" min="0" max="300" placeholder="e.g. 120" style="width:90px">
-      <button class="save-btn" style="margin-top:0" onclick="logProtein()">Log protein</button>
+    <h3>Protein tracker</h3>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px">Target: 100–130g per day (1.6–2g per kg bodyweight)</p>
+    <div id="protein-today-display" style="background:var(--clay-light);border:1.5px solid rgba(140,90,40,.2);border-radius:var(--radius);padding:16px;margin-bottom:14px;text-align:center">
+      <div style="font-family:'Playfair Display',serif;font-size:42px;color:var(--clay-deep);line-height:1" id="protein-today-grams">—</div>
+      <div style="font-size:12px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin-top:4px">grams today</div>
+      <div id="protein-today-bar-wrap" style="margin-top:10px;height:8px;background:var(--parchment-dark);border-radius:99px;overflow:hidden">
+        <div id="protein-today-bar" style="height:100%;background:linear-gradient(90deg,var(--clay),var(--rose));border-radius:99px;transition:width .4s ease;width:0%"></div>
+      </div>
+      <div id="protein-today-label" style="font-size:12px;color:var(--ink-soft);margin-top:6px;font-weight:600">Log your protein below</div>
     </div>
-    <button onclick="markProteinGoal()" style="margin-top:10px;width:100%;padding:11px;border-radius:var(--radius);border:1.5px solid var(--clay);background:var(--clay-light);color:var(--clay-deep);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer">&#10003; Mark protein goal hit today</button>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+      <label style="font-size:12px;font-weight:700;color:var(--ink-soft)">Add grams</label>
+      <input type="number" id="protein-grams" min="0" max="300" placeholder="e.g. 35" style="width:90px">
+      <input type="text" id="protein-food" placeholder="e.g. chicken breast" style="flex:1;min-width:100px">
+      <button class="save-btn" style="margin-top:0" onclick="logProtein()">Add</button>
+    </div>
+    <div id="protein-log-list" style="margin-top:8px"></div>
+    <button onclick="markProteinGoal()" style="margin-top:12px;width:100%;padding:11px;border-radius:var(--radius);border:1.5px solid var(--clay);background:var(--clay-light);color:var(--clay-deep);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer">Mark protein goal hit today (no count)</button>
   </div>
 </div>
 
@@ -602,12 +623,17 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
     <div class="workout-set-tracker" id="wo-set-bubbles"></div>
     <div class="rest-timer" id="rest-timer">
       <div class="rest-timer-num" id="rest-timer-num">60</div>
-      <div class="rest-timer-label">&#127807; Rest &mdash; breathe, you earned it</div>
+      <div class="rest-timer-label">Rest — breathe, you earned it</div>
       <button onclick="skipRest()" style="margin-top:10px;padding:7px 18px;border-radius:99px;border:1.5px solid var(--sage-deep);background:transparent;color:var(--sage-deep);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer">Skip rest</button>
     </div>
+    <div class="rest-timer" id="set-timer" style="background:var(--plum-light);border-color:var(--plum)">
+      <div class="rest-timer-num" id="set-timer-num" style="color:var(--plum-deep)">30</div>
+      <div class="rest-timer-label" id="set-timer-label" style="color:var(--plum-deep)">Hold</div>
+      <button onclick="skipSetTimer()" style="margin-top:10px;padding:7px 18px;border-radius:99px;border:1.5px solid var(--plum-deep);background:transparent;color:var(--plum-deep);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer">Done early</button>
+    </div>
     <div class="workout-nav-row">
-      <button class="wk-btn-outline" onclick="toggleVarPicker()">&#8644; Swap exercise</button>
-      <button class="wk-btn-solid" id="wo-next-btn" onclick="workoutNext()">Set done &#10003;</button>
+      <button class="wk-btn-outline" onclick="toggleVarPicker()">Swap exercise</button>
+      <button class="wk-btn-solid" id="wo-next-btn" onclick="workoutNext()">Set done</button>
     </div>
     <div style="text-align:center;margin-top:20px">
       <button onclick="closeWorkout()" style="font-size:13px;color:var(--ink-soft);background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif">End workout early</button>
@@ -1064,7 +1090,7 @@ function showPanel(id,btn){
   if(btn)btn.classList.add('active');
   if(id==='log'){updateStats();document.getElementById('notes-area').value=state.notes||''}
   if(id==='cycle'){renderCycleBanner('cycle-full-banner');initCycleInputs();}
-  if(id==='calendar'){renderCalendar();}
+  if(id==='calendar'){renderCalendar();renderProteinDisplay();}
 }
 
 function updateCountdown(){
@@ -1246,170 +1272,397 @@ function renderMood(){
 }
 
 // ─── WORKOUT MODE ────────────────────────────────────────
-let woState = { exercises:[], current:0, setsDone:0, totalSets:0, restInterval:null, dayName:'' };
+// Exercise database with timed flag, rest times, form tips, and variations
+const WORKOUT_DB = {
+  // ── LOWER BODY ──
+  'Single-leg glute bridges':{sets:3,reps:'15 each side',restSecs:45,timed:false,tip:'Squeeze the glute hard at the top for 1 full second. Hips stay level.',variations:['Hip thrusts — both legs','Donkey kicks','Sumo squats','Frog pumps','Single-leg hip thrust']},
+  'Reverse lunges':{sets:3,reps:'12 each leg',restSecs:45,timed:false,tip:'Front knee stays directly over your ankle. Step back far enough.',variations:['Curtsy lunges','Bulgarian split squats','Side lunges','Walking lunges','Pulse lunges']},
+  'Lateral band walks':{sets:3,reps:'20 steps each way',restSecs:45,timed:false,tip:'Stay in a slight squat. Keep constant tension — feet never fully together.',variations:['Clamshells','Side-lying leg raises','Sumo squat pulses','Hip abduction hold','Banded squats']},
+  'Single-leg calf raises':{sets:3,reps:'20 each side',restSecs:30,timed:false,tip:'Go slow on the way down — the eccentric phase builds the most strength.',variations:['Both-leg calf raises','Seated calf raises','Calf raise pulses','Staggered calf raises','Explosive calf raises']},
+  'Step-ups':{sets:3,reps:'12 each leg',restSecs:45,timed:false,tip:'Drive through the heel of the top foot. Use a kerb, rock, or doorstep.',variations:['Slow single-leg squats','Box jumps (low)','Pulse squats','Staggered squat','Goblet squat hold']},
+  // ── CORE A — RUNNER STABILITY ──
+  'Dead bug':{sets:3,reps:'10 each side',restSecs:30,timed:false,tip:'Lower back MUST stay flat on the floor throughout. Exhale as you lower.',variations:['Bird dog','Hollow body rocks','Toe touches','Ab wheel rollout','Slow mountain climbers']},
+  'Hollow body hold':{sets:3,reps:'30 sec',restSecs:30,timed:true,timeSecs:30,tip:'Banana shape. If lower back lifts, raise your legs higher until it stays flat.',variations:['Boat pose hold','V-sit hold','Plank to hollow','Reverse crunch','Pilates 100s']},
+  'Plank with shoulder taps':{sets:3,reps:'20 taps',restSecs:30,timed:false,tip:'Hips stay completely still as you lift each hand. Widen feet for stability.',variations:['Plank hip dips','Plank reach-through','Commando planks','Plank to push-up','Renegade rows']},
+  'Side plank':{sets:3,reps:'35 sec each side',restSecs:30,timed:true,timeSecs:35,tip:'One diagonal line. Don\'t let the bottom hip sag at all.',variations:['Side plank with hip dip','Star side plank','Copenhagen plank','Side plank reach-through','Side-lying crunch']},
+  'Glute bridge march':{sets:3,reps:'10 each leg',restSecs:30,timed:false,tip:'In a glute bridge, lift one foot 2 seconds at a time. Hips stay level.',variations:['Single-leg hip thrust','Frog pumps','Bridge pulses','Bridge with knee squeeze','Elevated bridge']},
+  // ── CORE B — STRENGTH & TONING ──
+  'Bicycle crunches':{sets:4,reps:'20 SLOW reps',restSecs:30,timed:false,tip:'Rotation comes from your ribcage, not your neck. Go slow — the slower the harder.',variations:['Cross-body mountain climbers','Oblique crunches','Windshield wipers','Seated rotations','Side crunch']},
+  'Leg raises':{sets:4,reps:'15 reps',restSecs:30,timed:false,tip:'Lower as slowly as you can. Stop just above the floor. Bend knees if back arches.',variations:['Flutter kicks','Scissors','Reverse crunch','Hanging knee raises','Pilates leg circles']},
+  'Russian twists':{sets:4,reps:'24 reps (12 each)',restSecs:30,timed:false,tip:'Lean back 45 degrees, rotate fully each side. Hold a water bottle for extra load.',variations:['Wood chops','Side plank rotations','Seated oblique crunch','Pallof press hold','Standing oblique crunch']},
+  'Mountain climbers':{sets:4,reps:'40 sec',restSecs:30,timed:true,timeSecs:40,tip:'Plank shape maintained throughout. Find the pace where you can still breathe through your nose.',variations:['Spiderman climbers','Cross-body mountain climbers','Slow mountain climbers','Bear crawl forward','High knees']},
+  'Superman hold':{sets:3,reps:'12 reps',restSecs:30,timed:false,tip:'Lift arms AND legs simultaneously. Hold 2 seconds at the top. Lower slowly.',variations:['Back extensions','Reverse hyperextension','Bird dog','Good mornings','Prone leg raises']},
+  'Plank hold':{sets:3,reps:'45 sec',restSecs:30,timed:true,timeSecs:45,tip:'Body in one straight line from head to heels. Squeeze everything — glutes, core, quads.',variations:['Forearm plank','Plank with leg lift','RKC plank','Long lever plank','Plank to downward dog']},
+  'Toe touches':{sets:3,reps:'20 reps',restSecs:20,timed:false,tip:'Legs straight up, reach fingertips toward toes. Full crunch at the top.',variations:['V-ups','Jackknives','Lying heel taps','Dead bug','Reverse crunch']},
+  // ── UPPER BODY ──
+  'Push-up (follow your progression)':{sets:3,reps:'current level',restSecs:60,timed:false,tip:'Hands wider than shoulders, body straight, elbows at 45 degrees — not flared out.',variations:['Diamond push-ups','Wide push-ups','Decline push-ups','Archer push-ups','Slow negative push-ups']},
+  'Resistance band rows':{sets:3,reps:'15 reps',restSecs:45,timed:false,tip:'Shoulders stay DOWN away from ears. Squeeze shoulder blades together at the end.',variations:['Single-arm band row','Band pull-downs','Band face pulls','Bent over band row','High row']},
+  'Band pull-aparts':{sets:3,reps:'20 reps',restSecs:30,timed:false,tip:'Arms extended at chest height. Pull to a T shape, feel the squeeze between blades.',variations:['Band dislocates','Rear delt fly','Band overhead press','Band chest press','Lateral raises']},
+  'Pike push-ups':{sets:3,reps:'8-10 reps',restSecs:45,timed:false,tip:'Hips high in a V. Lower the top of your head toward the floor. Bend knees to make easier.',variations:['Decline push-ups','Handstand hold (wall)','Band overhead press','Shoulder tap push-ups','Arnold press']},
+  'Tricep dips':{sets:3,reps:'10 reps',restSecs:45,timed:false,tip:'Elbows point straight BACK, not flared out. Keep back close to the surface.',variations:['Tricep push-ups','Band tricep pushdown','Overhead tricep extension','Close grip push-ups','Bench dips']},
+  // ── BEACH ──
+  'Sand sprints (15-20m)':{sets:8,reps:'15-20m sprint',restSecs:90,timed:false,tip:'Lean from ankles not waist. Drive knees high, pump arms. Full recovery between each.',variations:['Hill sprints','Bounding leaps','High knees sprint','Lateral shuffle sprints','Sprint to backpedal']},
+  'Jump squats':{sets:3,reps:'12 reps',restSecs:45,timed:false,tip:'Squat to 90 degrees, explode up. Land softly with bent knees — absorb it.',variations:['Squat pulses','Broad jumps','Split jumps','Tuck jumps','Power step-ups']},
+  'Bear crawls':{sets:3,reps:'20m',restSecs:60,timed:false,tip:'Knees hover low. Hips stay DOWN — resist sticking bum in the air.',variations:['Crab walks','Inchworms','Lizard crawl','Lateral bear crawl','Commando crawl']},
+};
 
-function buildWorkoutExercises(dayKey){
-  const days = getDayConfig(currentWeek);
-  const day = days.find(d=>d.key===dayKey);
-  if(!day) return [];
-  const exList = [];
-  day.sections.forEach(sec=>{
-    if(sec.label.toLowerCase().includes('warm')||sec.label.toLowerCase().includes('note')||sec.label.toLowerCase().includes('stretch')||sec.label.toLowerCase().includes('flexibility')||sec.label.toLowerCase().includes('splits')||sec.label.toLowerCase().includes('mobility')||sec.label.toLowerCase().includes('run')||sec.label.toLowerCase().includes('rest'))return;
-    sec.tasks.forEach(t=>{
-      // parse sets/reps from sub text
-      const setsMatch = t.sub.match(/(\d+)\s*[x×]\s*(\d+)/i);
-      const setsNum = setsMatch ? parseInt(setsMatch[1]) : 3;
-      const repsText = setsMatch ? setsMatch[1]+'×'+setsMatch[2] : '3 sets';
-      const baseName = t.text.replace(/\s*\(.*?\)/g,'').trim();
-      const vars = EXERCISE_VARIATIONS[baseName] || EXERCISE_VARIATIONS[t.text] || [];
-      // get form tip from ex-form if we can match
-      exList.push({
-        name: t.text,
-        baseName,
-        sets: setsNum,
-        repsText,
-        detail: t.sub,
-        tip: '',
-        variations: vars,
-        selectedVariation: null,
-      });
-    });
-  });
-  return exList;
+// Ab circuit — runs Tuesday AND Thursday AND Saturday (3x per week)
+// Progressively harder across weeks
+function getAbCircuit(week) {
+  if (week <= 2) return [
+    {name:'Dead bug',sets:3,reps:'10 each side',timed:false,tip:'Lower back flat on floor throughout. Exhale as you lower.'},
+    {name:'Hollow body hold',sets:3,reps:'25 sec',timed:true,timeSecs:25,tip:'Banana shape. Raise legs higher if back lifts.'},
+    {name:'Plank with shoulder taps',sets:3,reps:'16 taps',timed:false,tip:'Hips completely still as you lift each hand.'},
+    {name:'Side plank',sets:3,reps:'25 sec each side',timed:true,timeSecs:25,tip:'One diagonal line. Don\'t let the hip sag.'},
+    {name:'Glute bridge march',sets:3,reps:'10 each leg',timed:false,tip:'Lift one foot 2 sec at a time. Hips stay level.'},
+  ];
+  if (week <= 4) return [
+    {name:'Dead bug',sets:3,reps:'12 each side',timed:false,tip:'Lower back flat. Go slower each rep.'},
+    {name:'Hollow body hold',sets:3,reps:'30 sec',timed:true,timeSecs:30,tip:'Banana shape. Arms overhead makes it harder.'},
+    {name:'Bicycle crunches',sets:3,reps:'16 SLOW reps',timed:false,tip:'Rotation from ribcage. Slow and deliberate.'},
+    {name:'Side plank',sets:3,reps:'30 sec each side',timed:true,timeSecs:30,tip:'Perfect line, no hip sag.'},
+    {name:'Leg raises',sets:3,reps:'12 reps',timed:false,tip:'Lower as slowly as you can.'},
+    {name:'Mountain climbers',sets:3,reps:'30 sec',timed:true,timeSecs:30,tip:'Plank shape maintained throughout.'},
+  ];
+  if (week <= 6) return [
+    {name:'Dead bug',sets:4,reps:'12 each side',timed:false,tip:'Lower back welded to the floor.'},
+    {name:'Hollow body hold',sets:3,reps:'35 sec',timed:true,timeSecs:35,tip:'Hold the tension throughout — no rocking.'},
+    {name:'Bicycle crunches',sets:4,reps:'20 SLOW reps',timed:false,tip:'Go so slow it burns. That\'s the goal.'},
+    {name:'Side plank',sets:3,reps:'35 sec each side',timed:true,timeSecs:35,tip:'Stack feet or stagger for stability.'},
+    {name:'Leg raises',sets:4,reps:'14 reps',timed:false,tip:'Two-second lower on every rep.'},
+    {name:'Russian twists',sets:3,reps:'20 reps',timed:false,tip:'Lean back 45 degrees. Rotate fully.'},
+    {name:'Mountain climbers',sets:3,reps:'35 sec',timed:true,timeSecs:35,tip:'Fast but controlled. Plank stays solid.'},
+  ];
+  if (week <= 9) return [
+    {name:'Dead bug',sets:4,reps:'14 each side',timed:false,tip:'Lower back flat. Challenge yourself with slower reps.'},
+    {name:'Hollow body hold',sets:4,reps:'40 sec',timed:true,timeSecs:40,tip:'This is your most important core hold.'},
+    {name:'Bicycle crunches',sets:4,reps:'20 SLOW reps',timed:false,tip:'Each rep takes 3 seconds. That\'s the standard now.'},
+    {name:'Plank hold',sets:3,reps:'45 sec',timed:true,timeSecs:45,tip:'Full body tension. Squeeze everything.'},
+    {name:'Side plank',sets:3,reps:'40 sec each side',timed:true,timeSecs:40,tip:'No rest between sides.'},
+    {name:'Leg raises',sets:4,reps:'16 reps',timed:false,tip:'Lower in 3 seconds. Raise in 1.'},
+    {name:'Russian twists',sets:4,reps:'24 reps',timed:false,tip:'Hold a water bottle. Full rotation each side.'},
+    {name:'Mountain climbers',sets:3,reps:'40 sec',timed:true,timeSecs:40,tip:'Explosive but controlled.'},
+    {name:'Toe touches',sets:3,reps:'18 reps',timed:false,tip:'Legs straight up. Reach fingertips to toes.'},
+  ];
+  // weeks 10-12
+  return [
+    {name:'Dead bug',sets:4,reps:'15 each side',timed:false,tip:'Slow and precise. Lower back glued to floor.'},
+    {name:'Hollow body hold',sets:4,reps:'45 sec',timed:true,timeSecs:45,tip:'Peak core strength. Hold it.'},
+    {name:'Bicycle crunches',sets:4,reps:'24 SLOW reps',timed:false,tip:'3-second reps. Full extension each side.'},
+    {name:'Plank hold',sets:3,reps:'60 sec',timed:true,timeSecs:60,tip:'Full body tension. Don\'t let anything drop.'},
+    {name:'Side plank',sets:4,reps:'45 sec each side',timed:true,timeSecs:45,tip:'No compromise on form.'},
+    {name:'Leg raises',sets:4,reps:'18 reps',timed:false,tip:'3-second lower. Controlled at all times.'},
+    {name:'Russian twists',sets:4,reps:'28 reps',timed:false,tip:'Full rotation. Add weight if you can.'},
+    {name:'Mountain climbers',sets:4,reps:'45 sec',timed:true,timeSecs:45,tip:'Push yourself. This is peak week.'},
+    {name:'Toe touches',sets:4,reps:'20 reps',timed:false,tip:'Squeeze at the top every single rep.'},
+    {name:'Superman hold',sets:3,reps:'12 reps',timed:false,tip:'2-second hold at the top. Lower back strong.'},
+  ];
 }
 
-function startWorkout(dayKey){
+// Build full workout for a day — combines strength + ab circuit
+function buildWorkout(dayKey) {
   const days = getDayConfig(currentWeek);
-  const day = days.find(d=>d.key===dayKey);
-  if(!day) return;
-  const exercises = buildWorkoutExercises(dayKey);
-  if(!exercises.length){alert('No strength exercises for this day!');return;}
-  woState = { exercises, current:0, setsDone:0, totalSets: exercises.reduce((a,e)=>a+e.sets,0), restInterval:null, dayName: day.name, setsCompletedPerEx: exercises.map(()=>0) };
+  const day = days.find(d => d.key === dayKey);
+  if (!day) return [];
+
+  const exercises = [];
+  const SKIP_LABELS = ['warm','note','stretch','flexibility','splits','mobility','run','rest','volleyball'];
+
+  day.sections.forEach(sec => {
+    if (SKIP_LABELS.some(s => sec.label.toLowerCase().includes(s))) return;
+    // Skip core sections — we replace with progressive ab circuit
+    if (sec.label.toLowerCase().includes('core')) return;
+
+    sec.tasks.forEach(t => {
+      const dbEntry = WORKOUT_DB[t.text] || WORKOUT_DB[t.text.replace(/\s*\(.*?\)/g,'').trim()];
+      if (dbEntry) {
+        exercises.push({ ...dbEntry, name: t.text, selectedVariation: null });
+      } else {
+        // Parse from sub text as fallback
+        const setsMatch = t.sub.match(/(\d+)\s*[x×]\s*(\d+)/i);
+        const timMatch = t.sub.match(/(\d+)\s*sec/i);
+        exercises.push({
+          name: t.text, sets: setsMatch ? parseInt(setsMatch[1]) : 3,
+          reps: setsMatch ? setsMatch[1]+'×'+setsMatch[2] : timMatch ? timMatch[1]+' sec' : '3 sets',
+          restSecs: 45, timed: !!timMatch, timeSecs: timMatch ? parseInt(timMatch[1]) : 0,
+          tip: '', variations: [], selectedVariation: null,
+        });
+      }
+    });
+  });
+
+  // Add progressive ab circuit for Tue, Thu, Sat
+  if (['tue','thu','sat'].includes(dayKey)) {
+    const abCircuit = getAbCircuit(currentWeek);
+    abCircuit.forEach(ex => exercises.push({ ...ex, selectedVariation: null, variations: WORKOUT_DB[ex.name]?.variations || [] }));
+  }
+
+  return exercises;
+}
+
+// ── WORKOUT STATE ──
+let woState = { exercises:[], current:0, setsCompletedPerEx:[], restInterval:null, setTimerInterval:null, dayName:'', dayKey:'' };
+
+function startWorkout(dayKey) {
+  const days = getDayConfig(currentWeek);
+  const day = days.find(d => d.key === dayKey);
+  if (!day) return;
+  const exercises = buildWorkout(dayKey);
+  if (!exercises.length) { showToast('No strength exercises for this day!'); return; }
+  // Always fully reset — so it can be started fresh any number of times
+  clearInterval(woState.restInterval);
+  clearInterval(woState.setTimerInterval);
+  woState = {
+    exercises: exercises.map(e => ({ ...e, selectedVariation: null })),
+    current: 0,
+    setsCompletedPerEx: exercises.map(() => 0),
+    restInterval: null,
+    setTimerInterval: null,
+    dayName: day.name,
+    dayKey
+  };
   document.getElementById('wo-day-label').textContent = day.name;
+  document.getElementById('wo-title').textContent = day.name + ' workout';
+  document.getElementById('rest-timer').classList.remove('active');
+  document.getElementById('set-timer').classList.remove('active');
   document.getElementById('workout-overlay').classList.add('active');
-  document.body.style.overflow='hidden';
+  document.body.style.overflow = 'hidden';
   renderWorkoutExercise();
 }
 
-function renderWorkoutExercise(){
+function renderWorkoutExercise() {
+  clearInterval(woState.restInterval);
+  clearInterval(woState.setTimerInterval);
+  document.getElementById('rest-timer').classList.remove('active');
+  document.getElementById('set-timer').classList.remove('active');
+
   const ex = woState.exercises[woState.current];
-  if(!ex){ finishWorkout(); return; }
+  if (!ex) { finishWorkout(); return; }
+
   const totalEx = woState.exercises.length;
-  const pct = Math.round((woState.current/totalEx)*100);
-  document.getElementById('wo-prog-fill').style.width = pct+'%';
-  document.getElementById('wo-prog-label').textContent = 'Exercise '+(woState.current+1)+' of '+totalEx;
-  document.getElementById('wo-ex-num').textContent = 'Exercise '+(woState.current+1)+' of '+totalEx;
+  const pct = Math.round((woState.current / totalEx) * 100);
+  document.getElementById('wo-prog-fill').style.width = pct + '%';
+  document.getElementById('wo-prog-label').textContent = 'Exercise ' + (woState.current+1) + ' of ' + totalEx;
+  document.getElementById('wo-ex-num').textContent = 'Exercise ' + (woState.current+1) + ' of ' + totalEx;
+
   const displayName = ex.selectedVariation || ex.name;
   document.getElementById('wo-ex-name').textContent = displayName;
-  document.getElementById('wo-ex-sets').textContent = ex.repsText;
-  document.getElementById('wo-ex-detail').textContent = ex.detail;
+  document.getElementById('wo-ex-sets').textContent = ex.sets + ' sets  x  ' + ex.reps;
+
+  // Clean detail text — strip HTML entities for plain display
+  const detail = ex.tip || '';
+  const detailEl = document.getElementById('wo-ex-detail');
+  detailEl.textContent = detail;
+
   const tipEl = document.getElementById('wo-ex-tip');
-  if(ex.tip){tipEl.textContent=ex.tip;tipEl.style.display='block';}else{tipEl.style.display='none';}
-  // set bubbles
+  tipEl.style.display = 'none';
+
+  // Set bubbles
   const bubbles = document.getElementById('wo-set-bubbles');
   bubbles.innerHTML = '';
-  for(let i=0;i<ex.sets;i++){
+  const doneSets = woState.setsCompletedPerEx[woState.current];
+  for (let i = 0; i < ex.sets; i++) {
     const b = document.createElement('div');
-    b.className = 'set-bubble'+(i<woState.setsCompletedPerEx[woState.current]?' done':'');
-    b.textContent = 'Set '+(i+1);
+    b.className = 'set-bubble' + (i < doneSets ? ' done' : '');
+    b.textContent = 'Set ' + (i+1);
     bubbles.appendChild(b);
   }
-  document.getElementById('wo-next-btn').textContent = 'Set done ✓';
-  document.getElementById('wo-var-picker').style.display='none';
+
+  // Button label
+  const nextBtn = document.getElementById('wo-next-btn');
+  if (ex.timed && doneSets < ex.sets) {
+    nextBtn.textContent = 'Start timer';
+  } else if (doneSets >= ex.sets) {
+    nextBtn.textContent = 'Next exercise';
+  } else {
+    nextBtn.textContent = 'Set done';
+  }
+
+  document.getElementById('wo-var-picker').style.display = 'none';
   renderVariations();
 }
 
-function renderVariations(){
+function workoutNext() {
   const ex = woState.exercises[woState.current];
-  const opts = document.getElementById('wo-var-opts');
-  opts.innerHTML = '';
-  // original
-  const orig = document.createElement('div');
-  orig.className='var-opt'+((!ex.selectedVariation)?' active':'');
-  orig.textContent = ex.baseName;
-  orig.onclick=()=>selectVariation(null);
-  opts.appendChild(orig);
-  ex.variations.slice(0,4).forEach(v=>{
-    const d=document.createElement('div');
-    d.className='var-opt'+(ex.selectedVariation===v?' active':'');
-    d.textContent=v;
-    d.onclick=()=>selectVariation(v);
-    opts.appendChild(d);
-  });
-}
+  const done = woState.setsCompletedPerEx[woState.current];
 
-function selectVariation(v){
-  woState.exercises[woState.current].selectedVariation=v;
-  document.getElementById('wo-ex-name').textContent=v||woState.exercises[woState.current].name;
-  renderVariations();
-}
-
-function toggleVarPicker(){
-  const p=document.getElementById('wo-var-picker');
-  p.style.display=p.style.display==='none'?'block':'none';
-}
-
-function workoutNext(){
-  const ex=woState.exercises[woState.current];
-  const done=woState.setsCompletedPerEx[woState.current];
-  if(done<ex.sets){
-    woState.setsCompletedPerEx[woState.current]++;
-    renderWorkoutExercise();
-    if(woState.setsCompletedPerEx[woState.current]<ex.sets){
-      startRestTimer(60);
+  // If all sets done, move to next exercise
+  if (done >= ex.sets) {
+    woState.current++;
+    if (woState.current < woState.exercises.length) {
+      startRestTimer(woState.exercises[woState.current-1].restSecs || 60);
     } else {
-      // all sets done for this exercise
-      setTimeout(()=>{
-        woState.current++;
-        if(woState.current<woState.exercises.length){startRestTimer(90);}
-        else{finishWorkout();}
-      },400);
+      finishWorkout();
     }
+    return;
+  }
+
+  // Timed exercise — start the set timer
+  if (ex.timed) {
+    startSetTimer(ex.timeSecs, ex.reps);
+    return;
+  }
+
+  // Reps exercise — mark set done
+  woState.setsCompletedPerEx[woState.current]++;
+  const newDone = woState.setsCompletedPerEx[woState.current];
+
+  // Update bubbles immediately
+  const bubbles = document.getElementById('wo-set-bubbles');
+  if (bubbles.children[newDone-1]) bubbles.children[newDone-1].classList.add('done');
+
+  const nextBtn = document.getElementById('wo-next-btn');
+
+  if (newDone >= ex.sets) {
+    nextBtn.textContent = 'Next exercise';
+    startRestTimer(ex.restSecs || 60);
+  } else {
+    nextBtn.textContent = 'Set done';
+    startRestTimer(ex.restSecs || 45);
   }
 }
 
-let restTimerVal=0;
-function startRestTimer(secs){
-  const timerEl=document.getElementById('rest-timer');
-  const numEl=document.getElementById('rest-timer-num');
+// SET TIMER — for timed exercises like planks
+let setTimerVal = 0;
+function startSetTimer(secs, label) {
+  const timerEl = document.getElementById('set-timer');
+  const numEl = document.getElementById('set-timer-num');
+  const labelEl = document.getElementById('set-timer-label');
   timerEl.classList.add('active');
-  restTimerVal=secs;
-  numEl.textContent=restTimerVal;
+  setTimerVal = secs;
+  numEl.textContent = setTimerVal;
+  labelEl.textContent = 'Hold — ' + label;
+  document.getElementById('wo-next-btn').textContent = 'Skip';
+  clearInterval(woState.setTimerInterval);
+  woState.setTimerInterval = setInterval(() => {
+    setTimerVal--;
+    numEl.textContent = setTimerVal;
+    if (setTimerVal <= 0) {
+      clearInterval(woState.setTimerInterval);
+      timerEl.classList.remove('active');
+      // Mark set done
+      woState.setsCompletedPerEx[woState.current]++;
+      const newDone = woState.setsCompletedPerEx[woState.current];
+      const ex = woState.exercises[woState.current];
+      const bubbles = document.getElementById('wo-set-bubbles');
+      if (bubbles.children[newDone-1]) bubbles.children[newDone-1].classList.add('done');
+      if (newDone >= ex.sets) {
+        document.getElementById('wo-next-btn').textContent = 'Next exercise';
+        startRestTimer(ex.restSecs || 60);
+      } else {
+        document.getElementById('wo-next-btn').textContent = 'Start timer';
+        startRestTimer(ex.restSecs || 30);
+      }
+    }
+  }, 1000);
+}
+
+function skipSetTimer() {
+  clearInterval(woState.setTimerInterval);
+  document.getElementById('set-timer').classList.remove('active');
+  // Count as done
+  woState.setsCompletedPerEx[woState.current]++;
+  const newDone = woState.setsCompletedPerEx[woState.current];
+  const ex = woState.exercises[woState.current];
+  const bubbles = document.getElementById('wo-set-bubbles');
+  if (bubbles.children[newDone-1]) bubbles.children[newDone-1].classList.add('done');
+  if (newDone >= ex.sets) {
+    document.getElementById('wo-next-btn').textContent = 'Next exercise';
+    startRestTimer(ex.restSecs || 60);
+  } else {
+    document.getElementById('wo-next-btn').textContent = 'Start timer';
+    startRestTimer(ex.restSecs || 30);
+  }
+}
+
+// REST TIMER
+let restTimerVal = 0;
+function startRestTimer(secs) {
+  const timerEl = document.getElementById('rest-timer');
+  const numEl = document.getElementById('rest-timer-num');
+  timerEl.classList.add('active');
+  restTimerVal = secs;
+  numEl.textContent = restTimerVal;
   clearInterval(woState.restInterval);
-  woState.restInterval=setInterval(()=>{
+  woState.restInterval = setInterval(() => {
     restTimerVal--;
-    numEl.textContent=restTimerVal;
-    if(restTimerVal<=0){
+    numEl.textContent = restTimerVal;
+    if (restTimerVal <= 0) {
       clearInterval(woState.restInterval);
       timerEl.classList.remove('active');
       renderWorkoutExercise();
     }
-  },1000);
+  }, 1000);
 }
 
-function skipRest(){
+function skipRest() {
   clearInterval(woState.restInterval);
   document.getElementById('rest-timer').classList.remove('active');
   renderWorkoutExercise();
 }
 
-function finishWorkout(){
-  clearInterval(woState.restInterval);
-  const ts=new Date().toISOString();
-  if(!state.actLog)state.actLog=[];
-  state.actLog.unshift({ts,label:'Completed '+woState.dayName+' workout — '+woState.exercises.length+' exercises',day:woState.dayName});
-  saveState(state);
-  document.getElementById('workout-overlay').classList.remove('active');
-  document.body.style.overflow='';
-  // show completion message
-  setTimeout(()=>alert('Workout complete! Amazing work! &#127800;'),200);
+function renderVariations() {
+  const ex = woState.exercises[woState.current];
+  const opts = document.getElementById('wo-var-opts');
+  opts.innerHTML = '';
+  const orig = document.createElement('div');
+  orig.className = 'var-opt' + (!ex.selectedVariation ? ' active' : '');
+  orig.textContent = ex.name.replace(/\s*\(.*?\)/g,'').trim();
+  orig.onclick = () => selectVariation(null);
+  opts.appendChild(orig);
+  (ex.variations || []).slice(0,5).forEach(v => {
+    const d = document.createElement('div');
+    d.className = 'var-opt' + (ex.selectedVariation === v ? ' active' : '');
+    d.textContent = v;
+    d.onclick = () => selectVariation(v);
+    opts.appendChild(d);
+  });
 }
 
-function closeWorkout(){
+function selectVariation(v) {
+  woState.exercises[woState.current].selectedVariation = v;
+  document.getElementById('wo-ex-name').textContent = v || woState.exercises[woState.current].name;
+  renderVariations();
+}
+
+function toggleVarPicker() {
+  const p = document.getElementById('wo-var-picker');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+
+function finishWorkout() {
   clearInterval(woState.restInterval);
-  document.getElementById('rest-timer').classList.remove('active');
+  clearInterval(woState.setTimerInterval);
+  const ts = new Date().toISOString();
+  if (!state.actLog) state.actLog = [];
+  state.actLog.unshift({ ts, label: 'Completed ' + woState.dayName + ' workout — ' + woState.exercises.length + ' exercises', day: woState.dayName });
+  saveState(state);
   document.getElementById('workout-overlay').classList.remove('active');
-  document.body.style.overflow='';
+  document.body.style.overflow = '';
+  showToast('Workout complete! Amazing work!');
+}
+
+function closeWorkout() {
+  clearInterval(woState.restInterval);
+  clearInterval(woState.setTimerInterval);
+  document.getElementById('rest-timer').classList.remove('active');
+  document.getElementById('set-timer').classList.remove('active');
+  document.getElementById('workout-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Toast notification — replaces alert() so no HTML entities problem
+function showToast(msg) {
+  let toast = document.getElementById('app-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'app-toast';
+    toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#2E2018;color:white;padding:14px 24px;border-radius:99px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;z-index:9999;opacity:0;transition:opacity .3s;max-width:300px;text-align:center;pointer-events:none';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  setTimeout(() => { toast.style.opacity = '0'; }, 2800);
 }
 
 // ─── CALENDAR HABIT TRACKER ──────────────────────────────
@@ -1464,7 +1717,8 @@ function renderCalendar() {
     if (waterCount2 >= 8) { const dot = document.createElement('div'); dot.className='cal-dot cal-dot-water'; dots.appendChild(dot); waterCount++; }
 
     // Protein dot
-    const proteinHit = ((state.protein||{})[dateStr] || {}).goalHit;
+    const proteinData = (state.protein||{})[dateStr] || {};
+    const proteinHit = proteinData.goalHit;
     if (proteinHit) { const dot = document.createElement('div'); dot.className='cal-dot cal-dot-protein'; dots.appendChild(dot); proteinCount++; }
 
     // Cycle phase dot
@@ -1501,28 +1755,73 @@ function calChangeMonth(dir) {
 
 function logProtein() {
   const grams = parseInt(document.getElementById('protein-grams').value);
-  if (!grams || grams < 0) return;
+  const food = document.getElementById('protein-food').value.trim();
+  if (!grams || grams <= 0) return;
   if (!state.protein) state.protein = {};
   const key = getTodayKey();
-  state.protein[key] = { grams, goalHit: grams >= 100 };
+  if (!state.protein[key]) state.protein[key] = { entries: [], totalGrams: 0, goalHit: false };
+  state.protein[key].entries = state.protein[key].entries || [];
+  state.protein[key].entries.push({ grams, food: food || 'food', ts: new Date().toISOString() });
+  state.protein[key].totalGrams = state.protein[key].entries.reduce((a,e) => a + e.grams, 0);
+  state.protein[key].goalHit = state.protein[key].totalGrams >= 100;
   saveState(state);
   renderCalendar();
+  renderProteinDisplay();
   document.getElementById('protein-grams').value = '';
-  const btn = document.querySelector('#panel-calendar .save-btn');
-  const orig = btn.textContent; btn.textContent = 'Logged!';
-  setTimeout(() => btn.textContent = orig, 1200);
+  document.getElementById('protein-food').value = '';
 }
 
 function markProteinGoal() {
   if (!state.protein) state.protein = {};
   const key = getTodayKey();
-  state.protein[key] = { ...(state.protein[key]||{}), goalHit: true };
+  if (!state.protein[key]) state.protein[key] = { entries: [], totalGrams: 0, goalHit: false };
+  state.protein[key].goalHit = true;
   saveState(state);
   renderCalendar();
-  // brief feedback
-  const btn = document.querySelector('#panel-calendar button[onclick="markProteinGoal()"]');
-  const orig = btn.innerHTML; btn.innerHTML = '&#10003; Goal marked for today!';
-  setTimeout(() => btn.innerHTML = orig, 1500);
+  renderProteinDisplay();
+  showToast('Protein goal marked for today!');
+}
+
+function renderProteinDisplay() {
+  const key = getTodayKey();
+  const data = (state.protein || {})[key] || { entries: [], totalGrams: 0, goalHit: false };
+  const total = data.totalGrams || 0;
+  const GOAL = 120;
+  const pct = Math.min(Math.round(total / GOAL * 100), 100);
+
+  // Full display on calendar panel
+  const gramsEl = document.getElementById('protein-today-grams');
+  const barEl = document.getElementById('protein-today-bar');
+  const labelEl = document.getElementById('protein-today-label');
+  if (gramsEl) gramsEl.textContent = total > 0 ? total + 'g' : '—';
+  if (barEl) barEl.style.width = pct + '%';
+  if (labelEl) {
+    if (total === 0) labelEl.textContent = 'Log your protein below';
+    else if (data.goalHit) labelEl.textContent = 'Goal hit! ' + total + 'g of ' + GOAL + 'g target';
+    else labelEl.textContent = total + 'g of ' + GOAL + 'g — ' + (GOAL - total) + 'g to go';
+  }
+
+  // Quick view on week panel
+  const quickGrams = document.getElementById('protein-quick-grams');
+  const quickBar = document.getElementById('protein-quick-bar');
+  const quickLabel = document.getElementById('protein-quick-label');
+  if (quickGrams) quickGrams.textContent = total > 0 ? total + 'g' : '—';
+  if (quickBar) quickBar.style.width = pct + '%';
+  if (quickLabel) {
+    if (total === 0) quickLabel.textContent = 'Log in the Calendar tab';
+    else if (data.goalHit) quickLabel.textContent = 'Goal hit! ' + total + 'g today';
+    else quickLabel.textContent = total + 'g of ' + GOAL + 'g — ' + (GOAL - total) + 'g to go';
+  }
+
+  // Entries list on calendar panel
+  const listEl = document.getElementById('protein-log-list');
+  if (!listEl) return;
+  const entries = data.entries || [];
+  if (!entries.length) { listEl.innerHTML = ''; return; }
+  listEl.innerHTML = '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-bottom:6px">Today\'s entries</div>' +
+    entries.slice().reverse().map(e =>
+      '<div class="log-entry"><div class="log-dot" style="background:var(--clay)"></div><div style="font-weight:700;color:var(--clay-deep);min-width:40px">' + e.grams + 'g</div><div style="flex:1;color:var(--ink-mid)">' + e.food + '</div></div>'
+    ).join('');
 }
 
 // ─── INIT ────────────────────────────────────────────────
@@ -1539,6 +1838,7 @@ renderSplitsPhases();
 renderSplitsLog();
 updateStats();
 updateCountdown();
+renderProteinDisplay();
 
 // Register service worker for offline use
 if('serviceWorker' in navigator){
