@@ -298,7 +298,9 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
 .ex-search-container{display:flex;align-items:center;gap:8px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--pill);padding:0 14px}
 .ex-search-container:focus-within{border-color:var(--rose)}
 .ex-search{border:none!important;background:transparent!important;padding:11px 0!important;border-radius:0!important;flex:1}
-.ex-photo{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:8px;display:block}
+.ex-photo{width:100%;max-height:220px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:0;display:block}
+.ex-photo-wrap{margin-bottom:10px;border-radius:var(--radius-sm);overflow:hidden;border:1.5px solid var(--border-soft)}
+.ex-photo-caption{font-size:11px;color:var(--ink-soft);padding:6px 10px;background:var(--parchment);font-weight:600;text-align:center}
 .ex-card{background:var(--white);border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:7px;transition:box-shadow .15s}
 .ex-card:hover{box-shadow:0 2px 12px rgba(90,62,43,.08)}
 .ex-card.hidden{display:none}
@@ -622,15 +624,24 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
   <div class="ref-sec" data-section="core a runner stability">
     <h3>Core circuit A — runner stability (Tuesday)</h3>
     <div class="ex-card" data-ex="dead bug core stability lower back">
-      <img class="ex-photo" src="https://www.mensjournal.com/_next/image?url=https%3A%2F%2Fwww.mensjournal.com%2Fwp-content%2Fuploads%2F2021%2F04%2Fdead-bug.jpg&w=1200&q=75" alt="Dead bug exercise" onerror="this.style.display='none'">
+      <div class="ex-photo-wrap">
+      <img class="ex-photo" src="https://i.imgur.com/kFEABmB.gif" alt="Dead bug exercise" loading="lazy" onerror="this.closest('.ex-photo-wrap').style.display='none'">
+      <div class="ex-photo-caption">Dead bug — lower back flat, opposite arm and leg extend</div>
+    </div>
       <div class="ex-title">Dead bug</div><div class="ex-detail">Lie on back, arms up, knees at 90 degrees. Slowly lower opposite arm and leg toward the floor, return. 3 x 10 each side. Lower back MUST stay flat — if it lifts, you have gone too far.</div><div class="ex-form">Form tip: exhale as you lower the limbs. Breath braces the core and keeps the back down</div></div>
     <div class="ex-card" data-ex="hollow body hold core banana position">
-      <img class="ex-photo" src="https://i.ytimg.com/vi/LlDNef_Ztsc/maxresdefault.jpg" alt="Hollow body hold" onerror="this.style.display='none'">
+      <div class="ex-photo-wrap">
+      <img class="ex-photo" src="https://i.imgur.com/Zj5GXcU.gif" alt="Hollow body hold" loading="lazy" onerror="this.closest('.ex-photo-wrap').style.display='none'">
+      <div class="ex-photo-caption">Hollow body — banana shape, lower back pressed flat</div>
+    </div>
       <div class="ex-title">Hollow body hold</div><div class="ex-detail">Lie on back, press lower back flat, lift arms overhead and legs to about 45 degrees. Hold 25–45 sec (increases each week). Banana shape. Builds the deep core that holds your posture in the last 2km of a race.</div><div class="ex-form">Form tip: if your lower back lifts, raise your legs higher until it stays flat</div></div>
     <div class="ex-card" data-ex="plank shoulder taps core anti rotation stability">
       <div class="ex-title">Plank with shoulder taps</div><div class="ex-detail">In a strong plank, tap opposite shoulder alternately. 3 x 20 taps. Hips stay perfectly still. Anti-rotation core work — exactly what running demands.</div><div class="ex-form">Form tip: widen your feet for stability. Zero hip sway allowed</div></div>
     <div class="ex-card" data-ex="side plank lateral core hip stability">
-      <img class="ex-photo" src="https://www.bodybuilding-wizard.com/wp-content/uploads/2014/03/side-plank-1.jpg" alt="Side plank" onerror="this.style.display='none'">
+      <div class="ex-photo-wrap">
+      <img class="ex-photo" src="https://i.imgur.com/8QxXMvh.gif" alt="Side plank" loading="lazy" onerror="this.closest('.ex-photo-wrap').style.display='none'">
+      <div class="ex-photo-caption">Side plank — one diagonal line, hip stays lifted</div>
+    </div>
       <div class="ex-title">Side plank</div><div class="ex-detail">On forearm, body in one straight diagonal line, hips lifted. 3 x 25–45 sec each side (increases each week). Builds lateral hip stability that protects your knees with every stride.</div><div class="ex-form">Form tip: don't let the bottom hip sag. Stack your feet or stagger them for stability</div></div>
     <div class="ex-card" data-ex="glute bridge march core hip stability single leg">
       <div class="ex-title">Glute bridge march</div><div class="ex-detail">In a glute bridge (hips raised), lift one foot slightly, hold 2 sec, switch. 3 x 10 each leg. Challenges glute and core to stabilise together — exactly what happens in each stride.</div></div>
@@ -639,14 +650,20 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
   <div class="ref-sec" data-section="core b strength toning ab">
     <h3>Core circuit B — strength and toning (Thu + Sat)</h3>
     <div class="ex-card" data-ex="bicycle crunches ab oblique core">
-      <img class="ex-photo" src="https://fitnessvolt.com/wp-content/uploads/2022/07/Bicycle-Crunch.jpg" alt="Bicycle crunches" onerror="this.style.display='none'">
+      <div class="ex-photo-wrap">
+      <img class="ex-photo" src="https://i.imgur.com/OQCF6RL.gif" alt="Bicycle crunches" loading="lazy" onerror="this.closest('.ex-photo-wrap').style.display='none'">
+      <div class="ex-photo-caption">Bicycle crunches — slow rotation from ribcage</div>
+    </div>
       <div class="ex-title">Bicycle crunches</div><div class="ex-detail">Hands behind head, rotate elbow to opposite knee while extending the other leg. 3–4 x 16–24 SLOW reps. The slower you go, the harder it is — that is the whole point.</div><div class="ex-form">Form tip: rotation from your ribcage, not your neck. Lower back stays pressed to floor</div></div>
     <div class="ex-card" data-ex="leg raises lower ab core hip flexor">
       <div class="ex-title">Leg raises</div><div class="ex-detail">Lying on back, legs straight or slightly bent. Lower from 90 degrees slowly to just above the floor. 3–4 x 12–18. The lowering phase is the work — go as slow as you can.</div><div class="ex-form">Form tip: if back arches, bend your knees more or raise the stopping point</div></div>
     <div class="ex-card" data-ex="russian twists oblique rotation core">
       <div class="ex-title">Russian twists</div><div class="ex-detail">Seated, lean back 45 degrees, rotate side to side touching the ground each time. 3–4 x 20–28. Hold a water bottle for load. Chest stays tall throughout.</div></div>
     <div class="ex-card" data-ex="mountain climbers core cardio plank conditioning">
-      <img class="ex-photo" src="https://fitnessvolt.com/wp-content/uploads/2019/09/mountain-climbers.jpg" alt="Mountain climbers" onerror="this.style.display='none'">
+      <div class="ex-photo-wrap">
+      <img class="ex-photo" src="https://i.imgur.com/pE7YqAe.gif" alt="Mountain climbers" loading="lazy" onerror="this.closest('.ex-photo-wrap').style.display='none'">
+      <div class="ex-photo-caption">Mountain climbers — plank shape, drive knees in</div>
+    </div>
       <div class="ex-title">Mountain climbers</div><div class="ex-detail">In a solid plank, drive knees to chest alternately. 3–4 x 30–45 sec. Don't let the hips rise. Core endurance and cardio in one.</div><div class="ex-form">Form tip: find the pace where you can still breathe through your nose — that's your working pace</div></div>
     <div class="ex-card" data-ex="superman hold back extension lower back erector">
       <div class="ex-title">Superman hold</div><div class="ex-detail">Face down, arms extended overhead. Lift arms, chest and legs simultaneously. Hold 2 sec at top, lower slowly. 3 x 12. Lower back strength — the forgotten part of core training.</div></div>
@@ -673,7 +690,10 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
   <div class="ref-sec" data-section="lower body legs glute quad hamstring">
     <h3>Strength A — lower body (Tuesday)</h3>
     <div class="ex-card" data-ex="single leg glute bridge lower body hip runner knee">
-      <img class="ex-photo" src="https://www.verywellfit.com/thmb/WBM14MPhW7pNTGS3IbCwkRU0kI8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/single-leg-glute-bridge-4157948-02-15ca3e7e8d984012b7b0e1a8d18bdfc4.jpg" alt="Single leg glute bridge" onerror="this.style.display='none'">
+      <div class="ex-photo-wrap">
+      <img class="ex-photo" src="https://i.imgur.com/m0MsmOK.gif" alt="Single leg glute bridge" loading="lazy" onerror="this.closest('.ex-photo-wrap').style.display='none'">
+      <div class="ex-photo-caption">Single leg glute bridge — squeeze glute at top</div>
+    </div>
       <div class="ex-title">Single-leg glute bridges</div><div class="ex-detail">Lie on back, one foot flat on floor, other leg up. Drive through planted heel to lift hips. 3 x 15 each side. Most important exercise for preventing running knee injuries.</div><div class="ex-form">Form tip: squeeze the glute hard at the top for 1 second. Hips stay level — not twisted</div></div>
     <div class="ex-card" data-ex="reverse lunge leg quad glute balance">
       <div class="ex-title">Reverse lunges</div><div class="ex-detail">Step one foot back, lower back knee toward floor, push off front foot to return. 3 x 12 each leg. Safer for knees than forward lunges. Add weight with rocks or a backpack.</div><div class="ex-form">Form tip: front knee stays over your ankle — if past your toes, widen your stance</div></div>
