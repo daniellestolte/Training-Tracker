@@ -266,12 +266,38 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
 .cal-sum-val{font-family:'Playfair Display',serif;font-size:22px;line-height:1}
 .cal-sum-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-top:3px}
 @media(max-width:400px){.cal-day{min-height:48px}}
-/* EXERCISE GUIDE SEARCH */
+/* HABIT GRID */
+.habit-grid-wrap{margin-bottom:14px}
+.habit-grid-wrap h3{font-family:'Playfair Display',serif;font-size:19px;font-weight:400;margin-bottom:4px;color:var(--rose-deep)}
+.habit-grid-sub{font-size:13px;color:var(--ink-soft);margin-bottom:14px}
+.habit-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.habit-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--ink-soft)}
+.habit-week-row{display:flex;align-items:center;gap:4px;margin-bottom:3px}
+.habit-week-label{font-size:10px;font-weight:700;color:var(--ink-soft);width:36px;flex-shrink:0;text-align:right;padding-right:4px}
+.habit-days{display:flex;gap:3px}
+.habit-cell{width:24px;height:24px;border-radius:5px;background:var(--parchment-dark);position:relative;cursor:default;flex-shrink:0}
+.habit-cell.has-activity{background:var(--rose)}
+.habit-cell.has-water{background:#3D8A60}
+.habit-cell.has-protein{background:var(--clay)}
+.habit-cell.has-all{background:linear-gradient(135deg,var(--rose) 0%,var(--sage-deep) 50%,var(--clay) 100%)}
+.habit-cell.has-activity.has-water{background:linear-gradient(135deg,var(--rose),var(--sage-deep))}
+.habit-cell.has-activity.has-protein{background:linear-gradient(135deg,var(--rose),var(--clay))}
+.habit-cell.has-water.has-protein{background:linear-gradient(135deg,var(--sage-deep),var(--clay))}
+.habit-cell.future{opacity:.2}
+.habit-cell.today{outline:2px solid var(--rose-deep);outline-offset:1px}
+.habit-cell-dots{display:flex;gap:1px;position:absolute;bottom:2px;left:2px}
+.habit-mini-dot{width:5px;height:5px;border-radius:50%}
+.habit-day-heads{display:flex;gap:3px;margin-left:40px;margin-bottom:3px}
+.habit-day-head{width:24px;text-align:center;font-size:9px;font-weight:700;color:var(--ink-soft);flex-shrink:0}
+.habit-tooltip{position:fixed;background:var(--ink);color:white;font-size:11px;font-weight:600;padding:5px 10px;border-radius:6px;pointer-events:none;z-index:999;display:none;font-family:'Nunito',sans-serif;white-space:nowrap}
+@media(max-width:400px){.habit-cell{width:18px;height:18px}.habit-week-label{width:28px}.habit-day-head{width:18px}}
 .ex-search-wrap{position:sticky;top:0;background:var(--parchment);padding:12px 0 8px;z-index:10;margin-bottom:4px}
-.ex-search{width:100%;padding:11px 16px 11px 40px;border-radius:var(--pill);border:1.5px solid var(--border);background:var(--white);font-family:'Nunito',sans-serif;font-size:14px;color:var(--ink);outline:none}
+.ex-search{width:100%;padding:11px 16px;border-radius:var(--pill);border:1.5px solid var(--border);background:var(--white);font-family:'Nunito',sans-serif;font-size:14px;color:var(--ink);outline:none}
 .ex-search:focus{border-color:var(--rose)}
-.ex-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink-soft);font-size:16px;pointer-events:none}
-.ex-search-container{position:relative}
+.ex-search-icon{font-size:14px;color:var(--ink-soft);flex-shrink:0}
+.ex-search-container{display:flex;align-items:center;gap:8px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--pill);padding:0 14px}
+.ex-search-container:focus-within{border-color:var(--rose)}
+.ex-search{border:none!important;background:transparent!important;padding:11px 0!important;border-radius:0!important;flex:1}
 .ex-photo{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:8px;display:block}
 .ex-card{background:var(--white);border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:7px;transition:box-shadow .15s}
 .ex-card:hover{box-shadow:0 2px 12px rgba(90,62,43,.08)}
@@ -515,7 +541,44 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
     <div class="stat"><div class="stat-val" id="stat-streak">0</div><div class="stat-label">Day streak &#128293;</div></div>
     <div class="stat"><div class="stat-val" id="stat-wkdone">0</div><div class="stat-label">Weeks complete</div></div>
   </div>
-  <div class="card"><h3>Activity log</h3><p class="card-sub">Everything you've ticked off</p><div id="full-log"></div></div>
+
+  <!-- HABIT GRID -->
+  <div class="card">
+    <div class="habit-grid-wrap">
+      <h3>12-week habit tracker</h3>
+      <p class="habit-grid-sub">Every day of your program — tap a cell to see what you did</p>
+      <div class="habit-legend">
+        <div class="habit-legend-item"><div style="width:12px;height:12px;border-radius:3px;background:var(--rose)"></div>Activity</div>
+        <div class="habit-legend-item"><div style="width:12px;height:12px;border-radius:3px;background:#3D8A60"></div>Water goal</div>
+        <div class="habit-legend-item"><div style="width:12px;height:12px;border-radius:3px;background:var(--clay)"></div>Protein goal</div>
+        <div class="habit-legend-item"><div style="width:12px;height:12px;border-radius:3px;background:var(--parchment-dark)"></div>Not yet</div>
+      </div>
+      <div class="habit-day-heads" id="habit-day-heads">
+        <div class="habit-day-head">M</div>
+        <div class="habit-day-head">T</div>
+        <div class="habit-day-head">W</div>
+        <div class="habit-day-head">T</div>
+        <div class="habit-day-head">F</div>
+        <div class="habit-day-head">S</div>
+        <div class="habit-day-head">S</div>
+      </div>
+      <div id="habit-grid-rows"></div>
+    </div>
+  </div>
+
+  <!-- TODAY'S SUMMARY -->
+  <div class="card" id="today-summary-card">
+    <h3>Today at a glance</h3>
+    <div id="today-summary-content"></div>
+  </div>
+
+  <!-- ACTIVITY LOG -->
+  <div class="card">
+    <h3>Activity log</h3>
+    <p class="card-sub">Everything you've ticked off</p>
+    <div id="full-log"></div>
+  </div>
+
   <div class="card">
     <h3>How are you feeling? &#127800;</h3>
     <p class="card-sub">Jot down energy levels, soreness, wins &mdash; anything worth remembering</p>
@@ -523,6 +586,7 @@ select,input[type=number],input[type=text]{border:1.5px solid var(--border)!impo
     <button class="save-btn" onclick="saveNotes()">Save notes</button>
   </div>
 </div>
+<div id="habit-tooltip" class="habit-tooltip"></div>
 
 <div id="panel-reference" class="panel">
   <div class="ex-search-wrap">
@@ -946,7 +1010,7 @@ if(!state.water)state.water={};
 let currentWeek=state.currentWeek;
 
 const WATER_GOAL=10;
-function getTodayKey(){return new Date().toISOString().slice(0,10)}
+function getTodayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function renderWater(){
   const key=getTodayKey();const filled=state.water[key]||0;
   const container=document.getElementById('water-drops');const label=document.getElementById('water-label');
@@ -980,7 +1044,7 @@ function toggleTask(w,id){
     const dc=days.find(d=>d.sections.some(s=>s.tasks.some(t=>t.id===id)));
     const tc=dc?dc.sections.flatMap(s=>s.tasks).find(t=>t.id===id):null;
     if(!state.actLog)state.actLog=[];
-    state.actLog.unshift({ts,label:tc?tc.text:id,day:dc?dc.name:'',tid:id});
+    state.actLog.unshift({ts,localDate:getTodayKey(),label:tc?tc.text:id,day:dc?dc.name:'',tid:id});
     if(state.actLog.length>200)state.actLog=state.actLog.slice(0,200);
   }
   saveState(state);
@@ -1116,7 +1180,7 @@ function logPushup(){
   const ts=new Date().toISOString();
   state.pushupLog.unshift({ts,type,reps,sets});if(state.pushupLog.length>50)state.pushupLog=state.pushupLog.slice(0,50);
   if(!state.actLog)state.actLog=[];
-  state.actLog.unshift({ts,label:'Push-ups: '+sets+'x'+reps+' '+type,day:'Upper body'});
+  state.actLog.unshift({ts,localDate:getTodayKey(),label:'Push-ups: '+sets+'x'+reps+' '+type,day:'Upper body'});
   saveState(state);renderPushupLog();updateStats();
 }
 function renderPushupLog(){
@@ -1141,7 +1205,7 @@ function logSplits(){
   state.splitsLog.unshift({ts,dur,note});document.getElementById('sp-note').value='';
   if(state.splitsLog.length>50)state.splitsLog=state.splitsLog.slice(0,50);
   if(!state.actLog)state.actLog=[];
-  state.actLog.unshift({ts,label:'Splits: '+dur+' min'+(note?' \u2014 '+note:''),day:'Flexibility'});
+  state.actLog.unshift({ts,localDate:getTodayKey(),label:'Splits: '+dur+' min'+(note?' \u2014 '+note:''),day:'Flexibility'});
   saveState(state);renderSplitsLog();updateStats();
 }
 function renderSplitsLog(){
@@ -1155,7 +1219,7 @@ function updateStats(){
   document.getElementById('stat-sess').textContent=sessions;
   const today=new Date();today.setHours(0,0,0,0);
   let streak=0,d=new Date(today);
-  while(true){const ds=d.toISOString().slice(0,10);if((state.actLog||[]).some(e=>e.ts.slice(0,10)===ds)){streak++;d.setDate(d.getDate()-1);}else break;}
+  while(true){const ds=localDateStr(d);if((state.actLog||[]).some(e=>(e.localDate||e.ts.slice(0,10))===ds&&e.day!=='Check-in')){streak++;d.setDate(d.getDate()-1);}else break;}
   document.getElementById('stat-streak').textContent=streak;
   let wkDone=0;
   for(let w=1;w<=TOTAL_WEEKS;w++){let t=0,dn=0;getDayConfig(w).forEach(d=>d.sections.forEach(s=>s.tasks.forEach(tk=>{t++;if(isTaskDone(w,tk.id))dn++;})));if(t>0&&dn===t)wkDone++;}
@@ -1165,7 +1229,7 @@ function updateStats(){
 function renderFullLog(){
   const el=document.getElementById('full-log');const log=state.actLog||[];
   if(!log.length){el.innerHTML='<div style="font-size:13px;color:var(--ink-soft)">Nothing logged yet &mdash; start ticking things off!</div>';return;}
-  el.innerHTML=log.slice(0,40).map(e=>'<div class="log-entry"><div class="log-dot"></div><div class="log-date">'+fmtShort2(e.ts)+'</div><div><span style="color:var(--ink-soft);font-size:12px">'+e.day+' &middot; </span>'+e.label+'</div></div>').join('');
+  el.innerHTML=log.slice(0,40).map(e=>'<div class="log-entry"><div class="log-dot"></div><div class="log-date">'+(e.localDate||e.ts.slice(0,10))+'</div><div><span style="color:var(--ink-soft);font-size:12px">'+e.day+' &middot; </span>'+e.label+'</div></div>').join('');
 }
 function saveNotes(){
   state.notes=document.getElementById('notes-area').value;saveState(state);
@@ -1182,15 +1246,19 @@ function showPanel(id,btn){
   document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
   if(btn)btn.classList.add('active');
-  if(id==='log'){updateStats();document.getElementById('notes-area').value=state.notes||''}
+  if(id==='log'){updateStats();document.getElementById('notes-area').value=state.notes||'';renderHabitGrid();renderTodaySummary();}
   if(id==='cycle'){renderCycleBanner('cycle-full-banner');initCycleInputs();}
   if(id==='calendar'){renderCalendar();renderProteinDisplay();}
 }
 
 function updateCountdown(){
-  const diff=Math.ceil((RACE_DATE-new Date())/(1000*60*60*24));
-  const el=document.getElementById('days-to-go');
-  if(el)el.textContent=diff>0?diff+' days to go':diff===0?'Race day!':'You did it!';
+  const now = new Date();
+  // Use local date to avoid UTC offset issues in NT (UTC+9:30)
+  const todayLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const raceLocal = new Date(2026, 5, 30); // June 30 local
+  const diff = Math.ceil((raceLocal - todayLocal) / (1000*60*60*24));
+  const el = document.getElementById('days-to-go');
+  if(el) el.textContent = diff > 0 ? diff+' days to go' : diff === 0 ? 'Race day!' : 'You did it!';
 }
 
 // ─── CYCLE TRACKER ───────────────────────────────────────
@@ -1326,7 +1394,7 @@ const EXERCISE_VARIATIONS = {
 // ─── MOOD & ENERGY ───────────────────────────────────────
 const MOOD_EMOJIS = {awful:'&#128547;',meh:'&#128533;',ok:'&#128522;',good:'&#128513;',great:'&#129321;'};
 
-function getTodayKey(){return new Date().toISOString().slice(0,10)}
+function getTodayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 
 function setMood(mood){
   if(!state.mood)state.mood={};
@@ -1336,7 +1404,7 @@ function setMood(mood){
   // log it
   const existing = (state.actLog||[]).findIndex(e=>e.tid==='mood_'+key);
   if(existing>-1)state.actLog.splice(existing,1);
-  state.actLog.unshift({ts:new Date().toISOString(),label:'Mood: '+mood+' '+MOOD_EMOJIS[mood],day:'Check-in',tid:'mood_'+key});
+  state.actLog.unshift({ts:new Date().toISOString(),localDate:getTodayKey(),label:'Mood: '+mood+' '+MOOD_EMOJIS[mood],day:'Check-in',tid:'mood_'+key});
   saveState(state);
 }
 
@@ -1729,7 +1797,7 @@ function finishWorkout() {
   clearInterval(woState.setTimerInterval);
   const ts = new Date().toISOString();
   if (!state.actLog) state.actLog = [];
-  state.actLog.unshift({ ts, label: 'Completed ' + woState.dayName + ' workout — ' + woState.exercises.length + ' exercises', day: woState.dayName });
+  state.actLog.unshift({ ts, localDate:getTodayKey(), label: 'Completed ' + woState.dayName + ' workout — ' + woState.exercises.length + ' exercises', day: woState.dayName });
   saveState(state);
   document.getElementById('workout-overlay').classList.remove('active');
   document.body.style.overflow = '';
@@ -1787,7 +1855,7 @@ function renderCalendar() {
 
   for (let d = 1; d <= daysInMonth; d++) {
     const date = new Date(calYear, calMonth, d);
-    const dateStr = date.toISOString().slice(0,10);
+    const dateStr = localDateStr(date);
     const isFuture = date > today;
     const isToday = date.getTime() === today.getTime();
 
@@ -1803,7 +1871,7 @@ function renderCalendar() {
     dots.className = 'cal-dots';
 
     // Activity dot — any actLog entry on this date (excluding mood)
-    const hasActivity = (state.actLog||[]).some(e => e.ts.slice(0,10) === dateStr && e.day !== 'Check-in');
+    const hasActivity = (state.actLog||[]).some(e => (e.localDate||e.ts.slice(0,10)) === dateStr && e.day !== 'Check-in');
     if (hasActivity) { const dot = document.createElement('div'); dot.className='cal-dot cal-dot-activity'; dots.appendChild(dot); actCount++; }
 
     // Water dot — >= 8 glasses
@@ -1918,6 +1986,121 @@ function renderProteinDisplay() {
     ).join('');
 }
 
+// ─── HABIT GRID ──────────────────────────────────────────
+function localDateStr(date) {
+  return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
+}
+
+function renderHabitGrid() {
+  const grid = document.getElementById('habit-grid-rows');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayStr = localDateStr(today);
+
+  for (let w = 1; w <= TOTAL_WEEKS; w++) {
+    const weekOffset = (w-1)*7;
+    const weekStart = new Date(START_DATE);
+    weekStart.setDate(weekStart.getDate() + weekOffset);
+
+    const row = document.createElement('div');
+    row.className = 'habit-week-row';
+
+    const label = document.createElement('div');
+    label.className = 'habit-week-label';
+    label.textContent = 'W'+w;
+    row.appendChild(label);
+
+    const days = document.createElement('div');
+    days.className = 'habit-days';
+
+    for (let d = 0; d < 7; d++) {
+      const date = new Date(weekStart);
+      date.setDate(date.getDate() + d);
+      date.setHours(0,0,0,0);
+      const dateStr = localDateStr(date);
+      const isFuture = date > today;
+      const isToday = dateStr === todayStr;
+
+      const hasActivity = (state.actLog||[]).some(e => (e.localDate||e.ts.slice(0,10)) === dateStr && e.day !== 'Check-in');
+      const waterAmt = (state.water||{})[dateStr] || 0;
+      const hasWater = waterAmt >= 8;
+      const proteinData = (state.protein||{})[dateStr] || {};
+      const hasProtein = proteinData.goalHit || false;
+      const hasAll = hasActivity && hasWater && hasProtein;
+
+      const cell = document.createElement('div');
+      cell.className = 'habit-cell';
+      if (isFuture) cell.classList.add('future');
+      if (isToday) cell.classList.add('today');
+      if (hasAll) cell.classList.add('has-all');
+      else if (hasActivity && hasWater) cell.classList.add('has-activity','has-water');
+      else if (hasActivity && hasProtein) cell.classList.add('has-activity','has-protein');
+      else if (hasWater && hasProtein) cell.classList.add('has-water','has-protein');
+      else if (hasActivity) cell.classList.add('has-activity');
+      else if (hasWater) cell.classList.add('has-water');
+      else if (hasProtein) cell.classList.add('has-protein');
+
+      // Tooltip on tap/hover
+      if (!isFuture) {
+        const dateLabel = date.toLocaleDateString('en-AU', {day:'numeric',month:'short'});
+        const parts = [];
+        if (hasActivity) parts.push('Active');
+        if (hasWater) parts.push('Water '+waterAmt+'/10');
+        if (hasProtein) parts.push('Protein goal');
+        const tipText = dateLabel + (parts.length ? ' — ' + parts.join(', ') : ' — nothing logged');
+        cell.addEventListener('mouseenter', e => showHabitTooltip(e, tipText));
+        cell.addEventListener('mouseleave', hideHabitTooltip);
+        cell.addEventListener('touchstart', e => { e.preventDefault(); showHabitTooltip(e.touches[0], tipText); setTimeout(hideHabitTooltip, 2000); }, {passive:false});
+      }
+
+      days.appendChild(cell);
+    }
+    row.appendChild(days);
+    grid.appendChild(row);
+  }
+}
+
+function showHabitTooltip(e, text) {
+  const tip = document.getElementById('habit-tooltip');
+  if (!tip) return;
+  tip.textContent = text;
+  tip.style.display = 'block';
+  tip.style.left = Math.min(e.clientX + 8, window.innerWidth - 200) + 'px';
+  tip.style.top = (e.clientY - 36) + 'px';
+}
+function hideHabitTooltip() {
+  const tip = document.getElementById('habit-tooltip');
+  if (tip) tip.style.display = 'none';
+}
+
+function renderTodaySummary() {
+  const el = document.getElementById('today-summary-content');
+  if (!el) return;
+  const key = getTodayKey();
+  const todayMood = (state.mood||{})[key] || {};
+  const waterAmt = (state.water||{})[key] || 0;
+  const proteinData = (state.protein||{})[key] || {};
+  const todayActivity = (state.actLog||[]).filter(e => (e.localDate||e.ts.slice(0,10)) === key && e.day !== 'Check-in');
+  const MOOD_LABELS = {awful:'Rough day',meh:'Feeling meh',ok:'Feeling ok',good:'Feeling good',great:'Feeling amazing'};
+  const MOOD_EMOJI = {awful:'😟',meh:'😔',ok:'🙂',good:'😁',great:'🤩'};
+
+  const rows = [
+    { label:'Mood', value: todayMood.mood ? (MOOD_EMOJI[todayMood.mood]||'') + ' ' + (MOOD_LABELS[todayMood.mood]||todayMood.mood) : 'Not logged', hit: !!todayMood.mood, color:'var(--rose)' },
+    { label:'Energy', value: todayMood.energy ? todayMood.energy+'/5' : 'Not logged', hit: !!todayMood.energy, color:'var(--rose)' },
+    { label:'Water', value: waterAmt >= 10 ? 'Goal reached! '+waterAmt*250+'ml' : waterAmt > 0 ? waterAmt+'/10 glasses ('+waterAmt*250+'ml)' : 'Not started', hit: waterAmt >= 8, color:'#3D8A60' },
+    { label:'Protein', value: proteinData.totalGrams ? proteinData.totalGrams+'g logged'+(proteinData.goalHit?' — goal hit!':'') : proteinData.goalHit ? 'Goal marked' : 'Not logged', hit: !!proteinData.goalHit, color:'var(--clay)' },
+    { label:'Activity', value: todayActivity.length ? todayActivity.length+' session'+(todayActivity.length>1?'s':'')+' — '+todayActivity.map(e=>e.label).join(', ').slice(0,60) : 'Nothing logged yet', hit: todayActivity.length > 0, color:'var(--plum)' },
+  ];
+
+  el.innerHTML = rows.map(r => `
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border-soft)">
+      <div style="width:10px;height:10px;border-radius:50%;background:${r.hit ? r.color : 'var(--parchment-dark)'};flex-shrink:0"></div>
+      <div style="font-size:12px;font-weight:700;color:var(--ink-soft);width:58px;flex-shrink:0">${r.label}</div>
+      <div style="font-size:13px;color:${r.hit ? 'var(--ink)' : 'var(--ink-soft)'};flex:1">${r.value}</div>
+    </div>`).join('');
+}
+
 // ─── EXERCISE GUIDE SEARCH ───────────────────────────────
 function searchExercises(query) {
   const q = query.toLowerCase().trim();
@@ -1963,6 +2146,8 @@ renderPushupLog();
 renderSplitsPhases();
 renderSplitsLog();
 updateStats();
+renderHabitGrid();
+renderTodaySummary();
 updateCountdown();
 renderProteinDisplay();
 
