@@ -1020,7 +1020,7 @@ function renderWater(){
     d.innerHTML=i<filled?'&#128167;':'&#9675;';d.onclick=()=>toggleWater(i);container.appendChild(d);
   }
   const ml=filled*250;
-  label.textContent=filled===0?'Tap a drop to start tracking':filled>=WATER_GOAL?'Goal reached! '+ml+'ml today':filled+'/'+WATER_GOAL+' glasses &bull; '+ml+'ml of 2500ml';
+  label.textContent=filled===0?'Tap a drop to start tracking':filled>=WATER_GOAL?'Goal reached! '+ml+'ml today':filled+'/'+WATER_GOAL+' glasses \u2022 '+ml+'ml of 2500ml';
 }
 function toggleWater(idx){
   const key=getTodayKey();const current=state.water[key]||0;
@@ -1349,7 +1349,7 @@ function saveCycleSettings(){
   renderCycleBanner('cycle-banner-week');
   renderCycleBanner('cycle-full-banner');
   const btn=document.querySelector('#panel-cycle .save-btn');
-  const orig=btn.textContent;btn.textContent='Saved! &#127800;';
+  const orig=btn.textContent;btn.textContent='Saved! \uD83C\uDF38';
   setTimeout(()=>btn.textContent=orig,1500);
 }
 
